@@ -1,0 +1,15 @@
+bookdown::gitbook:
+  include:
+    highlight: pygments
+  css: style.css
+  number_sections: false
+  config:
+    sharing:
+      facebook: false
+      twitter: false
+    toc:
+      before: |
+        <li><a href="./">Heliconiini learning analysis</a></li>
+
+
+

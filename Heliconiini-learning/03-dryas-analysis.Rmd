@@ -1,0 +1,380 @@
+```{r data-prep-dryas, include=FALSE}
+library(lme4)
+library(lmerTest)
+library(psych)
+library(ggplot2)
+library(ggpubr)
+library(DHARMa)
+library(dplyr)
+library(tidyr)
+library(DHARMa)
+library(effects)
+library(broom)
+library(broom.mixed)
+library(cowplot)
+
+
+data = read.csv('heliconiini-data.csv')
+data =  data %>% filter(species == 'dryas')
+data = data %>% group_by(id) %>% mutate(total.activity = (n.correct.training+n.incorrect.training))
+```
+
+# Dryas experiments 
+
+In a second experiment, we tested a reduced sample of *Dryas iulia*, a closely related butterfly, to test if the ability to learn associations was limited to *Heliconius*. 13 out of 19 D. iulia made both choices in both time periods during training, the remaining 6 were removed from further analyses. An additional individual was removed after making no feeding attempts in the final test. One cage had purple rewarded in the AM and yellow rewarded in the PM with an unreversed final test order (group 1), while the second cage had yellow rewarded in the AM and purple rewarded in the PM with a reversed final test order (group 2). In this sample only Dryas from group 2 met the training criterion (n = 6). However, since the order of the final test has no bearing on how an individual behaves during the training trials, and test order has no effect in *H. hecale*, we assumed this is unlikely to be problematic.
+
+## Dryas all individuals 
+
+Across analyses on Dryas learning performance we again asked whether the time of day influenced: (a) in subsections titled **Initial preference**, shifts in proportional preference for the colour rewarding in the morning when naïve, using a binomial GLMM with response variable “morning reward colour choices/afternoon reward colour choices” and fixed factor “time  of  day” (morning or afternoon); (b) in subsections titled **Trained preference**, shifts in proportional colour preference when trained, using the same specifications. Identity was included as a random effect throughout.
+
+First we subset our data to remove any individuals who did not make both colour choices in either morning or afternoon during training.
+
+```{r}
+data2 = data %>% group_by(id) %>% filter(all(n.correct.training > 0 & n.incorrect.training > 0))
+```
+
+Furthermore we remove individuals who did not respond at all during a session in final test.
+
+```{r}
+data3 = data2 %>% group_by(id) %>% filter(all(n.morning.colour.test > 0 | n.afternoon.colour.test > 0))
+```
+
+### Initial preference
+
+##### Model
+
+Is there a shift in preference for colours when individuals are naive 
+
+```{r}
+naive.model = 
+  glmer(cbind(n.morning.colour.initial, n.afternoon.colour.initial) ~ 
+          time.of.day + (1 | cage/id),
+        data=  data3, family = binomial)
+```
+
+##### Results 
+
+```{r, include=FALSE}
+summary(naive.model)
+```
+
+```{r, echo=FALSE, results=FALSE}
+naive.model.tidy_fit = broom.mixed::tidy(naive.model)
+naive.model.tidy_fit$p.value = ifelse(naive.model.tidy_fit$p.value < .001, ## Condition
+                      "< .001",  ## if condition is true
+                      paste(naive.model.tidy_fit$p.value %>% round(3))) ## if condition is false
+```
+
+```{r,  results=TRUE, echo=FALSE}
+knitr::kable(naive.model.tidy_fit[1:2,] %>% dplyr::select(-group, -effect) %>% mutate_if(is.numeric, round, digits = 3)) 
+```
+
+No, p-value = 0.11 for time of day effect
+
+##### Model Residuals
+
+```{r, include=TRUE, echo=FALSE}
+simulationOutput <- simulateResiduals(fittedModel = naive.model)
+plot(simulationOutput)
+```
+
+## Trained preference
+
+##### Model
+
+Is there a shift in preference for colours when individuals are trained?
+
+```{r}
+trained.model = 
+  glmer(cbind(n.morning.colour.test, n.afternoon.colour.test) ~ 
+          time.of.day + (1 | id),
+        data=  data3, family = binomial)
+```
+
+##### Results 
+
+```{r, include=FALSE}
+summary(trained.model)
+```
+
+```{r, echo=FALSE, results=FALSE}
+trained.model.tidy_fit = broom.mixed::tidy(trained.model)
+trained.model.tidy_fit$p.value = ifelse(trained.model.tidy_fit$p.value < .001, ## Condition
+                      "< .001",  ## if condition is true
+                      paste(trained.model.tidy_fit$p.value %>% round(3))) ## if condition is false
+```
+
+```{r,  results=TRUE, echo=FALSE}
+knitr::kable(trained.model.tidy_fit[1:2,] %>% dplyr::select(-group, -effect) %>% mutate_if(is.numeric, round, digits = 3)) 
+```
+
+No, p = 0.99  for time of day effect 
+
+##### Model Residuals
+
+```{r, include=TRUE, echo=FALSE}
+simulationOutput <- simulateResiduals(fittedModel = trained.model)
+plot(simulationOutput)
+```
+
+## Dryas high and low performers
+
+Remove individuals who did not achieve greater than 50% correct responses in last 2 days of training 
+
+```{r}
+data4 = data3 %>% group_by(id) %>% filter(all(prop.correct.training.last.2 > 0.5))
+```
+
+### Initial preference
+
+#### High Performers
+
+##### Model
+
+Do individuals who  perform well in last 2 days of training shift preference initially 
+
+```{r}
+naive.model.high.performers = 
+  glmer(cbind(n.morning.colour.initial, n.afternoon.colour.initial) ~ 
+          time.of.day  + (1 |id),
+        data= data4, family = binomial)
+```
+
+##### Results 
+
+```{r, include=FALSE}
+summary(naive.model.high.performers)
+```
+
+```{r, echo=FALSE, results=FALSE}
+naive.model.high.performers.tidy_fit = broom.mixed::tidy(naive.model.high.performers)
+naive.model.high.performers.tidy_fit$p.value = ifelse(naive.model.high.performers.tidy_fit$p.value < .001, ## Condition
+                      "< .001",  ## if condition is true
+                      paste(naive.model.high.performers.tidy_fit$p.value %>% round(3))) ## if condition is false
+```
+
+```{r,  results=TRUE, echo=FALSE}
+knitr::kable(naive.model.high.performers.tidy_fit[1:2,] %>% dplyr::select(-group, -effect) %>% mutate_if(is.numeric, round, digits = 3)) 
+```
+
+No, p = 0.09
+
+##### Model Residuals
+
+```{r, include=TRUE, echo=FALSE, fig.width=4}
+simulationOutput <- simulateResiduals(fittedModel = naive.model.high.performers)
+plotQQunif(simulationOutput)
+```
+
+```{r}
+# pull out individuals below criterion
+data5 = data3 %>% group_by(id) %>% filter(any(prop.correct.training.last.2 < 0.51))
+```
+
+##### Model
+
+Do individuals who were not correct at high rate shift preference initially 
+
+```{r}
+naive.model.low.performers = 
+  glmer(cbind(n.morning.colour.initial, n.afternoon.colour.initial) ~ 
+          time.of.day + (1 | id),
+        data =data5, family = binomial)
+```
+
+##### Results 
+
+```{r, include=FALSE}
+summary(naive.model.low.performers)
+```
+
+```{r, echo=FALSE, results=FALSE}
+naive.model.low.performers.tidy_fit = broom.mixed::tidy(naive.model.low.performers)
+naive.model.low.performers.tidy_fit$p.value = ifelse(naive.model.low.performers.tidy_fit$p.value < .001, ## Condition
+                      "< .001",  ## if condition is true
+                      paste(naive.model.low.performers.tidy_fit$p.value %>% round(3))) ## if condition is false
+```
+
+```{r,  results=TRUE, echo=FALSE}
+knitr::kable(naive.model.low.performers.tidy_fit[1:2,] %>% dplyr::select(-group, -effect) %>% mutate_if(is.numeric, round, digits = 3)) 
+```
+
+No, p = 0.66
+
+##### Model Residuals
+
+```{r, include=TRUE, echo=FALSE, fig.width=4}
+simulationOutput <- simulateResiduals(fittedModel = naive.model.low.performers)
+plotQQunif(simulationOutput)
+```
+
+### Trained preference
+
+#### High Performers
+
+##### Model
+
+Do individuals who were correct at a high rate shift preference when trained? 
+
+
+```{r}
+trained.model.high.performers = 
+  glmer(cbind(n.morning.colour.test, n.afternoon.colour.test) ~ 
+          time.of.day + (1 | id),
+        data=  data4, family = binomial)
+```
+
+##### Results 
+
+```{r, include=FALSE}
+summary(trained.model.high.performers)
+```
+
+```{r, echo=FALSE, results=FALSE}
+trained.model.high.performers.tidy_fit = broom.mixed::tidy(trained.model.high.performers)
+trained.model.high.performers.tidy_fit$p.value = ifelse(trained.model.high.performers.tidy_fit$p.value < .001, ## Condition
+                      "< .001",  ## if condition is true
+                      paste(trained.model.high.performers.tidy_fit$p.value %>% round(3))) ## if condition is false
+```
+
+```{r,  results=TRUE, echo=FALSE}
+knitr::kable(trained.model.high.performers.tidy_fit[1:2,] %>% dplyr::select(-group, -effect) %>% mutate_if(is.numeric, round, digits = 3)) 
+```
+
+Yes, p < 0.001 for the time of day effect. The preference for the colour that is rewarding in the morning decreased by 40%. 
+
+```{r dryas-learning-data-plot, echo=FALSE, fig.cap="Data from colour preference trials of D. iulia meeting the training criterion. (A) Naïve preferences in the morning and afternoon. (B) Preferences of butterflies from (A) post-training. Grey lines connect individuals. Data are means ± 95% CI", fig.id="dryas-learning-data-plot", warning=FALSE, message=FALSE}
+### Naive preference data plot for high performers
+g <- ggplot(data4, aes(time.of.day, (n.morning.colour.initial/(n.morning.colour.initial+n.afternoon.colour.initial)))) + theme_classic()
+
+a <- g + geom_jitter(size =2, alpha = .25, width = 0.02) +
+  stat_summary(
+    geom = 'point',
+    fun = 'mean',
+    size = 4.5,
+    shape = 15) +
+  stat_summary(geom = 'errorbar', 
+               fun.data = 'mean_ci', position = position_dodge(width=0), width = 0.1) 
+
+naive.pref.plot <- a + ylab('Morning reward colour preference') + xlab("Time of Day") + ggtitle("Naive shift in preference") +
+  theme(axis.text=element_text(size=10), axis.title=element_text(size=11,face="bold"), 
+        plot.title = element_text(size=12, hjust=0.5)) + ylim(-0.05, 1.05) + geom_line(aes(group = id), color = 'grey') 
+
+### Trained preference data plot for high performers
+g2 <- ggplot(data4, aes(time.of.day, (n.morning.colour.test/(n.morning.colour.test+n.afternoon.colour.test)))) + theme_classic()
+
+b <- g2 + geom_jitter(size =2, alpha = .25, width = 0.02) +
+  stat_summary(
+    geom = 'point',
+    fun = 'mean',
+    size = 4.5,
+    shape = 15) +
+  stat_summary(geom = 'errorbar', 
+               fun.data = 'mean_ci', position = position_dodge(width=.05), width = 0.1) 
+
+trained.pref.plot <- b + ylab('Morning reward colour preference') + xlab("Time of Day") + ggtitle("Trained shift in preference") +
+  theme(axis.text=element_text(size=10), axis.title=element_text(size=11,face="bold"), 
+        plot.title = element_text(size=12, hjust=0.5), axis.line.y = element_blank(), axis.text.y = element_blank(), axis.ticks.y =  element_blank(),axis.title.y = element_blank()) + ylim(-0.05, 1.05) + geom_line(aes(group = id), color = 'grey')
+
+
+ggarrange(naive.pref.plot, trained.pref.plot, nrow = 1)
+
+#### Plot end #######
+```
+
+##### Model Residuals
+
+```{r, include=TRUE, echo=FALSE, fig.width=4}
+simulationOutput <- simulateResiduals(fittedModel = trained.model.high.performers)
+plotQQunif(simulationOutput)
+```
+
+There's a slight deviation due to the outlier which increases the variance in the trained afternoon session as seen in Figure \@ref(fig:dryas-learning-data-plot)
+
+##### Model
+
+Do individuals who were not correct at a high rate shift preference when trained
+
+```{r}
+trained.model.low.performers = 
+  glmer(cbind(n.morning.colour.test, n.afternoon.colour.test) ~ 
+          time.of.day + (1 | id),
+        data=  data5, family = binomial)
+```
+
+##### Results 
+
+```{r, include=FALSE}
+summary(trained.model.low.performers)
+```
+
+```{r, echo=FALSE, results=FALSE}
+trained.model.low.performers.tidy_fit = broom.mixed::tidy(trained.model.low.performers)
+trained.model.low.performers.tidy_fit$p.value = ifelse(trained.model.low.performers.tidy_fit$p.value < .001, ## Condition
+                      "< .001",  ## if condition is true
+                      paste(trained.model.low.performers.tidy_fit$p.value %>% round(3))) ## if condition is false
+```
+
+```{r,  results=TRUE, echo=FALSE}
+knitr::kable(trained.model.high.performers.tidy_fit[1:2,] %>% dplyr::select(-group, -effect) %>% mutate_if(is.numeric, round, digits = 3)) 
+```
+
+yes, slightly in the incorrect direction p < 0.001
+
+##### Model Residuals
+
+```{r, include=TRUE, echo=FALSE, fig.width=4}
+simulationOutput <- simulateResiduals(fittedModel = trained.model.low.performers)
+plotQQunif(simulationOutput)
+```
+
+## Dryas activity between time periods
+
+To see whether there was a difference in the total number of choices a butterfly made at a particular time period we used a Poisson generalised linear mixed effect model. 
+
+##### Model
+
+```{r, echo=TRUE}
+dryas.activity.model = 
+  glmer(total.activity ~ time.of.day + (1 | cage/id),
+                       data= data, family = poisson)
+```
+
+##### Results
+
+```{r,include=FALSE}
+data = data %>% group_by(id) %>% mutate(total.activity = (n.correct.training+n.incorrect.training))
+
+data %>% group_by(time.of.day) %>% summarise(mean(total.activity))
+```
+
+*D. iulia* butterflies made on average 15 more choices in the afternoon than in the morning.
+
+```{r dryas-activity-data-plot, echo=FALSE, fig.cap="The morning and afternoon activity values for individuual btuterflies. Data are means +/- 95% CI. Lines connects individuals across time periods", fig.id="dryas-activity-data-plot", warning=FALSE, message=FALSE}
+
+activity.plot.x.axis.labels = c("Morning", "Afternoon")
+
+ggplot(data,
+       aes(x = time.of.day,
+           y = total.activity)) + 
+  theme_cowplot() + 
+  geom_jitter(width = 0, alpha = 0.3) +
+  stat_summary(geom = 'point', fun = 'mean', size = 4.5, shape = 15) +
+  stat_summary(geom = 'errorbar', fun.data = 'mean_ci', position = position_dodge(width=0), width = 0.1) + 
+  geom_line(aes(group = id), alpha = 0.2) +
+  xlab("Time of Day") +
+  scale_x_discrete(labels = activity.plot.x.axis.labels) +
+  ylab("Total Activity") +
+  theme(legend.position = "none", 
+        axis.text=element_text(size=14), 
+        axis.title=element_text(size=14,face="bold"), 
+        plot.title = element_text(size=16, hjust=0.5))
+```
+
+##### Model Residuals
+
+```{r, include=TRUE, echo=FALSE}
+simulationOutput <- simulateResiduals(fittedModel = dryas.activity.model)
+plot(simulationOutput)
+```
+

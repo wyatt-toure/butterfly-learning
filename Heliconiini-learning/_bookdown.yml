@@ -1,0 +1,6 @@
+book_filename: "Analysis-for-Heliconiini-time-learning"
+delete_merged_file: true
+language:
+  ui:
+    chapter_name: ""
+output_dir: "docs"

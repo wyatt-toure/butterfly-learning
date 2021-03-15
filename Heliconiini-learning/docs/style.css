@@ -1,0 +1,95 @@
+p.caption {
+  color: #777;
+  margin-top: 10px;
+}
+p code {
+  white-space: inherit;
+}
+pre {
+  word-break: normal;
+  word-wrap: normal;
+}
+pre code {
+  white-space: inherit;
+}
+
+.book .book-body .page-wrapper .page-inner section.normal {
+    display: block;
+    background-color: #ffffff;
+    color: #2d2d2d;
+    padding: 5px 15px;
+    word-wrap: break-word;
+    font-family: sans-serif;
+    overflow: hidden;
+    line-height: 1.7;
+    text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+}
+
+/* Rather than resize the header, just get rid of line */
+.book.with-summary .book-header.fixed {
+  /*font-family: Stalemate Roboto Sans; ignored as all it is doing is taking from index title*/
+  border-bottom: 0 solid rgba(0,0,0,.07);  /*just remove it; this makes height in .book-header above moot*/
+  border-bottom-width: 0;
+  border-bottom-style: solid;
+  border-bottom-color: rgba(0, 0, 0, 0.07);
+}
+
+/* nav/menu area */
+.book .book-summary ul.summary li a, .book .book-summary ul.summary li span {
+    display: block;
+    padding: 10px 25px;
+    border-bottom: none;
+    color: #2d2d2d; /**/
+    background: 0 0;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+    font-family: sans-serif;
+    /* font-variant: small-caps; */
+}
+
+
+.book .book-summary ul.summary li a:hover, .book .book-summary ul.summary li.active>a {
+  color: #ffffff;  /*#6197D5*/
+  background-color: #153845;
+}
+
+/* so that before and after aren't treated the same as the toc, because why would they? */
+.book .book-summary ul.summary li.before a {
+  color: #153845;
+  text-decoration: none;
+  font-size: 125%;
+  font-variant: small-caps;
+  font-family: sans-serif;
+  font-weight: 500;
+}
+
+
+.book .book-summary ul.summary li.before a:hover,
+.book .book-summary ul.summary li.before li.active>a {
+  color: #fffff8;  /*#6197D5*/
+    background-color: #153845;
+  text-decoration: none;
+}
+
+.book .book-summary ul.summary li.after a, .book .book-summary ul.summary li.after a:hover {
+  background-color: transparent;
+}
+
+h1, h2, h3, h4, h5 {
+  color:#333333;
+  font-family: sans-serif;
+}
+
+a:link {
+  color: #4C84C1;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+
+
