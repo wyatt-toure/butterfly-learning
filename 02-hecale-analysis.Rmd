@@ -22,7 +22,13 @@ data = data %>% group_by(id) %>% mutate(total.activity = (n.correct.training+n.i
 
 # Hecale experiments
 
-Across analyses on learning performance we asked whether the time of day influenced: (a) in subsections titled **Initial preference**, shifts in proportional preference for the colour rewarding in the morning when naïve, using a binomial GLMM with response variable “morning reward colour choices/afternoon reward colour choices” and fixed factor “time  of  day” (morning or afternoon); (b) in subsections titled **Trained preference**, shifts in proportional colour preference when trained, using the same specifications but with the additional fixed factor “presentation order” (standard or reversed). Identity was included as a random effect throughout as well as cage if it did not lead to a singular fit due to no variance being captured by the variable. 
+Across analyses on learning performance we asked whether the time of day influenced: 
+
+(a) in subsections titled **Initial preference**, shifts in proportional preference for the colour rewarding in the morning when naïve, using a binomial GLMM with response variable “morning reward colour choices/afternoon reward colour choices” and fixed factor “time  of  day” (morning or afternoon); 
+
+(b) in subsections titled **Trained preference**, shifts in proportional colour preference when trained, using the same specifications but with the additional fixed factor “presentation order” (standard or reversed). 
+
+Identity was included as a random effect throughout as well as cage if it did not lead to a singular fit due to no variance being captured by the variable. 
 
 ## Hecale, all individuals
 

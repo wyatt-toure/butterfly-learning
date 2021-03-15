@@ -25,7 +25,13 @@ In a second experiment, we tested a reduced sample of *Dryas iulia*, a closely r
 
 ## Dryas all individuals 
 
-Across analyses on Dryas learning performance we again asked whether the time of day influenced: (a) in subsections titled **Initial preference**, shifts in proportional preference for the colour rewarding in the morning when naïve, using a binomial GLMM with response variable “morning reward colour choices/afternoon reward colour choices” and fixed factor “time  of  day” (morning or afternoon); (b) in subsections titled **Trained preference**, shifts in proportional colour preference when trained, using the same specifications. Identity was included as a random effect throughout.
+Across analyses on Dryas learning performance we again asked whether the time of day influenced: 
+
+(a) in subsections titled **Initial preference**, shifts in proportional preference for the colour rewarding in the morning when naïve, using a binomial GLMM with response variable “morning reward colour choices/afternoon reward colour choices” and fixed factor “time  of  day” (morning or afternoon); 
+
+(b) in subsections titled **Trained preference**, shifts in proportional colour preference when trained, using the same specifications. 
+
+Identity was included as a random effect throughout.
 
 First we subset our data to remove any individuals who did not make both colour choices in either morning or afternoon during training.
 
