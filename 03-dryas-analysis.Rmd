@@ -12,7 +12,7 @@ library(effects)
 library(broom)
 library(broom.mixed)
 library(cowplot)
-
+library(report)
 
 data = read.csv('heliconiini-data.csv')
 data =  data %>% filter(species == 'dryas')
@@ -384,3 +384,10 @@ simulationOutput <- simulateResiduals(fittedModel = dryas.activity.model)
 plot(simulationOutput)
 ```
 
+# Tools used and References
+
+A complete list of the tools used is produced below:
+
+```{r, echo=FALSE}
+knitr::kable(as.data.frame(report(sessionInfo())))
+```
