@@ -25,8 +25,8 @@ Data: heliconiini-data.csv
 | n.correct.training.last.2        | The number of correct choices made in the last 2 days of training                                                                    |
 | n.incorrect.training.last.2      | The number of incorrect choices made in the last 2 days of training                                                                  |
 | prop.correct.training.last.2     | The proportion of correct choices made in the last 2 days of training                                                                |
-| n.morning.colour.initial         | The number of choices made for the colour which will become rewarding in the morning during initial, na•ve tests                     |
-| n.afternoon.colour.initial       | The number of choices made for the colour which will become rewarding in the afternoon during initial, na•ve tests                   |
+| n.morning.colour.initial         | The number of choices made for the colour which will become rewarding in the morning during initial, naive tests                     |
+| n.afternoon.colour.initial       | The number of choices made for the colour which will become rewarding in the afternoon during initial, naive tests                   |
 | species                          | The species of the individual                                                                                                        |
 | criterion                        | Whether the individual passed or failed the training criterion                                                                       |
 | n.morning.colour.training        | The number of choices made for the colour which is rewarding in the morning during training                                          |
