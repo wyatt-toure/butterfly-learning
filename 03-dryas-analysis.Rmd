@@ -322,7 +322,7 @@ trained.model.low.performers.tidy_fit$p.value = ifelse(trained.model.low.perform
 ```
 
 ```{r,  results=TRUE, echo=FALSE}
-knitr::kable(trained.model.high.performers.tidy_fit[1:2,] %>% dplyr::select(-group, -effect) %>% mutate_if(is.numeric, round, digits = 3)) 
+knitr::kable(trained.model.low.performers.tidy_fit[1:2,] %>% dplyr::select(-group, -effect) %>% mutate_if(is.numeric, round, digits = 3)) 
 ```
 
 yes, slightly in the incorrect direction p < 0.001
