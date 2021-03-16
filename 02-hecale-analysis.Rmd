@@ -22,17 +22,17 @@ data = data %>% group_by(id) %>% mutate(total.activity = (n.correct.training+n.i
 
 # Hecale experiments
 
-Across analyses on learning performance we asked whether the time of day influenced: 
+Across analyses on *H. hecale* learning performance we asked whether the time of day influenced: 
 
-(a) in subsections titled **Initial preference**, shifts in proportional preference for the colour rewarding in the morning when naïve, using a binomial GLMM with response variable “morning reward colour choices/afternoon reward colour choices” and fixed factor “time  of  day” (morning or afternoon); 
+(a) In subsections titled **Initial preference** - the shifts in proportional preference for the colour rewarding in the morning when naïve, using a binomial GLMM with response variable “morning reward colour choices/afternoon reward colour choices” and fixed factor “time  of  day” (morning or afternoon); 
 
-(b) in subsections titled **Trained preference**, shifts in proportional colour preference when trained, using the same specifications but with the additional fixed factor “presentation order” (standard or reversed). 
+(b) In subsections titled **Trained preference** - shifts in proportional colour preference when trained, using the same specifications but with the additional fixed factor “presentation order” (standard or reversed). 
 
 Identity was included as a random effect throughout as well as cage if it did not lead to a singular fit due to no variance being captured by the variable. 
 
-## Hecale, all individuals
+## Hecale all individuals
 
-We initially looked at all individuals—excluding those which did not attempt to feed from both feeders in AM or, more commonly, PM during training (see Hecale activity between time periods section), or did not make any foraging attempts during a final test session. We also established a training criterion given variation in responsiveness to the test during training we identified individuals that correctly adjust their behaviour in AM and PM sessions during training with reinforced feeders. In the Hecale high and low performers section we asked whether these individuals demonstrate evidence of learning by behaving in the same way when presented with unreinforced feeders in the post-training preference test. 
+We initially looked at all individuals—excluding those which did not attempt to feed from both feeders in AM or, more commonly, PM during training (see Hecale activity between time periods section), or did not make any foraging attempts during a final test session. We also established a training criterion given observed variation in responsiveness to the learning task throughout training. We identified individuals that correctly adjusted their behaviour in AM and PM sessions during training with reinforced feeders and in the [Hecale high and low performers section](#hecale-high-and-low-performers) asked whether these individuals demonstrate evidence of learning by behaving in the same way when presented with unreinforced feeders in the post-training preference test. 
 
 
 ### Initial preference
@@ -60,9 +60,9 @@ data3 = data2 %>%
   filter(all(n.morning.colour.test > 0 | n.afternoon.colour.test > 0))
 ```
 
-Is there a shift in preference for colours when individuals are naive ?
-
 ##### Model
+
+We now ask with a binomial GLMM whether there a shift in preference for colours when individuals were naive.
 
 ```{r model 2, echo=TRUE}
 naive.model = 
@@ -88,7 +88,7 @@ naive.model.tidy_fit$p.value = ifelse(naive.model.tidy_fit$p.value < .001, ## Co
 knitr::kable(naive.model.tidy_fit[1:2,] %>% dplyr::select(-group, -effect) %>% mutate_if(is.numeric, round, digits = 3)) 
 ```
 
-No, there is no significant shift in preference for the colour that is rewarding in the morning between time periods initially when individuals are naive. 
+We see there is no significant shift in preference for the colour that is rewarding in the morning between time periods initially when individuals are naive (p = 0.39 for time of day effect). 
 
 
 ##### Model Residuals
@@ -110,7 +110,7 @@ plot(simulationOutput)
 
 ##### Model 
 
-Is there a shift in preference for colours when individuals are trained 
+Now we will be looking at butterflies after training and asking if there is a shift in preference for the colour that is rewarded in the morning based on the time of day when individuals are trained. We include an effect of final presentation.
 
 ```{r}
 trained.model = 
@@ -136,9 +136,10 @@ trained.model.tidy_fit$p.value = ifelse(trained.model.tidy_fit$p.value < .001, #
 knitr::kable(trained.model.tidy_fit[1:4,] %>% dplyr::select(-group, -effect) %>% mutate_if(is.numeric, round, digits = 3)) 
 ```
 
-We don't find a significant shift as a result of time of day (p = 0.06) but the effect size is in the expected direction *i.e.* a decrease in the morning reward colour preference in the afternoon.
+We don't find a significant shift as a result of time of day (p = 0.06) but the effect size is in the expected direction *i.e.*, a decrease in the morning reward colour preference in the afternoon. Moreover, we don't see an effect of final presentation (p = 0.86) or an interaction effect of final presentation with time of day (p = 0.16)
 
 ##### Model Residuals
+
 ```{r, include=TRUE, echo=FALSE}
 simulationOutput <- simulateResiduals(fittedModel = trained.model)
 plot(simulationOutput)
@@ -146,21 +147,21 @@ plot(simulationOutput)
 
 ## Hecale high and low performers
 
-We noticed considerable variation in how flexible individuals were during training *i.e.*, some individuals performed better during training compared to others. In order to see whether high performers showed more evidence of learning than low performers we looked at the initial and trained preferences of butterflies that made a majority (>50%) of correct feeding choices in the final two training days in both the morning and afternoon as well as those that did not meet this criterion. The expectation is that high performers would show more evidence of shifting their preference throughout the day at the final test session.
+We noticed considerable variation in how flexible individuals were during training *i.e.*, some individuals performed better during training compared to others. In order to see whether high performers showed more evidence of learning than low performers, we looked at the initial and trained preferences of butterflies that made a majority (>50%) of correct feeding choices in the final two training days in both the morning and afternoon as well as those that did not meet this criterion. The expectation is that high performers would show evidence of shifting their preference throughout the day at the final test session. 
 
 ### Initial preference
 
 #### High Performers
 
-First we will be looking at the shift in preference initially in naive butterflies that were high performers in the experiment. To do so we will remove individuals who did not achieve greater than 50% correct responses in the last 2 days of training 
+First we will be looking at the shift in preference based on time of day initially in naive butterflies that were high performers in the experiment. To do so we will remove individuals who did not achieve greater than 50% correct responses in the last 2 days of training 
 
 ```{r, echo=TRUE}
 data4 = data3 %>% group_by(id) %>% filter(all(prop.correct.training.last.2 > 0.5))
 ```
 
-We ask whether individuals who perform well in last 2 days of training shift preference between the time periods initially.
-
 ##### Model
+
+We now ask whether individuals who perform well in last 2 days of training shift colour preference between the time periods initially.
 
 ```{r, echo=TRUE}
 naive.model.high.performers = 
@@ -182,7 +183,7 @@ naive.model.high.performers.tidy_fit$p.value = ifelse(naive.model.high.performer
 knitr::kable(naive.model.high.performers.tidy_fit[1:2,] %>% dplyr::select(-group, -effect) %>% mutate_if(is.numeric, round, digits = 3)) 
 ```
 
-High performers do not significantly shift preference initially. 
+We find no evidence of high performers shifting their colour preference based on time of day initially (p = 0.79)
 
 ##### Model Residuals
 
@@ -193,15 +194,16 @@ plot(simulationOutput)
 
 #### Low Performers
 
-Next we will look at individuals which under-performed during training so we extract individuals below the criterion. 
+Next we look at individuals which under-performed during training so we extract individuals below the criterion. 
 
 ```{r}
 data5 = data3 %>% group_by(id) %>% filter(any(prop.correct.training.last.2 < 0.51))
 ```
 
-We now ask do individuals who were incorrect at high rate shift preference initially? Note we include the line `control=glmerControl(optimizer="bobyqa",optCtrl=list(maxfun=2e5))` to change the optimizer since this model initially fails to converge. 
-
 ##### Model
+
+We now ask do individuals who did not make over 50% correct choices at the last 2 days of training shift their colour preference based on time of day initially? Note we include the line `control=glmerControl(optimizer="bobyqa",optCtrl=list(maxfun=2e5))` to change the optimizer since this model initially fails to converge. 
+
 
 ```{r}
 naive.model.low.performers = 
@@ -224,7 +226,7 @@ naive.model.low.performers.tidy_fit$p.value = ifelse(naive.model.low.performers.
 knitr::kable(naive.model.low.performers.tidy_fit[1:2,] %>% dplyr::select(-group, -effect) %>% mutate_if(is.numeric, round, digits = 3)) 
 ```
 
-Low performers also do not significantly shift their preference between time periods initially.
+Low performers like high performers do not significantly shift their colour preference based on the time of day between time periods initially (p = 0.26).
 
 ##### Model Residuals
 
@@ -235,19 +237,19 @@ plot(simulationOutput)
 
 ### Trained preference
 
-Now we will look at trained preferences which were measured after 10 days of training. 
+We next look at trained preferences which were measured after 10 days of training. 
 
 #### High Performers
 
-We first ask whether individuals who were correct at a high rate during training shift preference when trained. Note here the cage random effect was dropped due to it not capturing any variance leading to a singular fit. 
-
 ##### Model
+
+We first ask whether individuals who were correct at a higher rate during training shifted their colour preference based on the time of day when trained. Note here the cage random effect was dropped due to it not capturing any variance leading to a singular fit. 
 
 ```{r, echo=TRUE}
 trained.model.high.performers = 
   glmer(cbind(n.morning.colour.test, n.afternoon.colour.test) ~ 
           time.of.day * final.presentation + (1 | id), 
-        data=  data4, family = binomial)
+        data = data4, family = binomial)
 ```
 
 ##### Results
@@ -263,7 +265,7 @@ trained.model.high.performers.tidy_fit$p.value = ifelse(trained.model.high.perfo
 knitr::kable(trained.model.high.performers.tidy_fit[1:4,] %>% dplyr::select(-group, -effect) %>% mutate_if(is.numeric, round, digits = 3)) 
 ```
 
-We find that there is a significant shift in preference for the morning colour between time periods among high performing butterflies. When trained these butterflies shift their preference for the morning reward colour by 12% (Figure \@ref(fig:learning-data-plot)).
+We find that there is a significant shift in preference for the morning colour between time periods among high performing butterflies (p = 0.01). When trained these butterflies shift their preference for the morning reward colour by 12% (Figure \@ref(fig:learning-data-plot)).
 
 ```{r, learning-data-plot, echo=FALSE, fig.cap="Data from colour preference trials of H. hecale meeting the training criterion. (A) Naïve preferences in the morning and afternoon. (B) Preferences of butterflies from (A) post-training. Grey lines connect individuals. Data are means ± 95% CI.", fig.id="learning-data-plot", warning=FALSE, message=FALSE}
 ### Naive preference data plot for high performers
@@ -280,7 +282,7 @@ a <- g + geom_jitter(size =2, alpha = .25, width = 0.02) +
 
 naive.pref.plot <- a + ylab('Morning reward colour preference') + xlab("Time of Day") + ggtitle("Naive shift in preference") +
   theme(axis.text=element_text(size=10), axis.title=element_text(size=11,face="bold"), 
-        plot.title = element_text(size=12, hjust=0.5)) + ylim(-0.05, 1.05) + geom_line(aes(group = id), color = 'grey') 
+        plot.title = element_text(size=12, hjust=0.5)) + ylim(-0.05, 1.05) + geom_line(aes(group = id), color = 'grey')  +  scale_x_discrete(labels = c("Morning", "Afternoon"))
 
 ### Trained preference data plot for high performers
 g2 <- ggplot(data4, aes(time.of.day, (n.morning.colour.test/(n.morning.colour.test+n.afternoon.colour.test)))) + theme_classic()
@@ -296,10 +298,15 @@ b <- g2 + geom_jitter(size =2, alpha = .25, width = 0.02) +
 
 trained.pref.plot <- b + ylab('Morning reward colour preference') + xlab("Time of Day") + ggtitle("Trained shift in preference") +
   theme(axis.text=element_text(size=10), axis.title=element_text(size=11,face="bold"), 
-        plot.title = element_text(size=12, hjust=0.5), axis.line.y = element_blank(), axis.text.y = element_blank(), axis.ticks.y =  element_blank(),axis.title.y = element_blank()) + ylim(-0.05, 1.05) + geom_line(aes(group = id), color = 'grey')
+        plot.title = element_text(size=12, hjust=0.5), axis.line.y = element_blank(), axis.text.y = element_blank(), axis.ticks.y =  element_blank(),axis.title.y = element_blank()) + ylim(-0.05, 1.05) + geom_line(aes(group = id), color = 'grey') +  scale_x_discrete(labels = c("Morning", "Afternoon"))
 
 
-ggarrange(naive.pref.plot, trained.pref.plot, nrow = 1)
+ggarrange(naive.pref.plot, trained.pref.plot, nrow = 1,
+          widths = c(1,1),
+          labels = "AUTO",
+          label.x = c(0.15,0.05),
+          hjust = -1.5,
+          vjust = 1.4)
 ```
 
 ##### Model Residuals

@@ -135,7 +135,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Background</a></li>
 <li class="chapter" data-level="" data-path="hecale-experiments.html"><a href="hecale-experiments.html"><i class="fa fa-check"></i>Hecale experiments</a>
 <ul>
-<li class="chapter" data-level="" data-path="hecale-experiments.html"><a href="hecale-experiments.html#hecale-all-individuals"><i class="fa fa-check"></i>Hecale, all individuals</a>
+<li class="chapter" data-level="" data-path="hecale-experiments.html"><a href="hecale-experiments.html#hecale-all-individuals"><i class="fa fa-check"></i>Hecale all individuals</a>
 <ul>
 <li class="chapter" data-level="" data-path="hecale-experiments.html"><a href="hecale-experiments.html#initial-preference"><i class="fa fa-check"></i>Initial preference</a></li>
 <li class="chapter" data-level="" data-path="hecale-experiments.html"><a href="hecale-experiments.html#trained-preference"><i class="fa fa-check"></i>Trained preference</a></li>
@@ -181,15 +181,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="hecale-experiments" class="section level1">
 <h1>Hecale experiments</h1>
-<p>Across analyses on learning performance we asked whether the time of day influenced:</p>
+<p>Across analyses on <em>H. hecale</em> learning performance we asked whether the time of day influenced:</p>
 <ol style="list-style-type: lower-alpha">
-<li><p>in subsections titled <strong>Initial preference</strong>, shifts in proportional preference for the colour rewarding in the morning when naïve, using a binomial GLMM with response variable “morning reward colour choices/afternoon reward colour choices” and fixed factor “time of day” (morning or afternoon);</p></li>
-<li><p>in subsections titled <strong>Trained preference</strong>, shifts in proportional colour preference when trained, using the same specifications but with the additional fixed factor “presentation order” (standard or reversed).</p></li>
+<li><p>In subsections titled <strong>Initial preference</strong> - the shifts in proportional preference for the colour rewarding in the morning when naïve, using a binomial GLMM with response variable “morning reward colour choices/afternoon reward colour choices” and fixed factor “time of day” (morning or afternoon);</p></li>
+<li><p>In subsections titled <strong>Trained preference</strong> - shifts in proportional colour preference when trained, using the same specifications but with the additional fixed factor “presentation order” (standard or reversed).</p></li>
 </ol>
 <p>Identity was included as a random effect throughout as well as cage if it did not lead to a singular fit due to no variance being captured by the variable.</p>
 <div id="hecale-all-individuals" class="section level2">
-<h2>Hecale, all individuals</h2>
-<p>We initially looked at all individuals—excluding those which did not attempt to feed from both feeders in AM or, more commonly, PM during training (see Hecale activity between time periods section), or did not make any foraging attempts during a final test session. We also established a training criterion given variation in responsiveness to the test during training we identified individuals that correctly adjust their behaviour in AM and PM sessions during training with reinforced feeders. In the Hecale high and low performers section we asked whether these individuals demonstrate evidence of learning by behaving in the same way when presented with unreinforced feeders in the post-training preference test.</p>
+<h2>Hecale all individuals</h2>
+<p>We initially looked at all individuals—excluding those which did not attempt to feed from both feeders in AM or, more commonly, PM during training (see Hecale activity between time periods section), or did not make any foraging attempts during a final test session. We also established a training criterion given observed variation in responsiveness to the learning task throughout training. We identified individuals that correctly adjusted their behaviour in AM and PM sessions during training with reinforced feeders and in the <a href="hecale-experiments.html#hecale-high-and-low-performers">Hecale high and low performers section</a> asked whether these individuals demonstrate evidence of learning by behaving in the same way when presented with unreinforced feeders in the post-training preference test.</p>
 <div id="initial-preference" class="section level3">
 <h3>Initial preference</h3>
 <p>This model asks whether there is a shift in preference for the colour that is rewarding in the morning between time periods.</p>
@@ -209,10 +209,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="hecale-experiments.html#cb2-1" aria-hidden="true" tabindex="-1"></a>data3 <span class="ot">=</span> data2 <span class="sc">%&gt;%</span> </span>
 <span id="cb2-2"><a href="hecale-experiments.html#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> </span>
 <span id="cb2-3"><a href="hecale-experiments.html#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">all</span>(n.morning.colour.test <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">|</span> n.afternoon.colour.test <span class="sc">&gt;</span> <span class="dv">0</span>))</span></code></pre></div>
-<p>Is there a shift in preference for colours when individuals are naive ?</p>
 </div>
 <div id="model" class="section level5">
 <h5>Model</h5>
+<p>We now ask with a binomial GLMM whether there a shift in preference for colours when individuals were naive.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="hecale-experiments.html#cb3-1" aria-hidden="true" tabindex="-1"></a>naive.model <span class="ot">=</span> </span>
 <span id="cb3-2"><a href="hecale-experiments.html#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glmer</span>(<span class="fu">cbind</span>(n.morning.colour.initial, n.afternoon.colour.initial) <span class="sc">~</span> </span>
 <span id="cb3-3"><a href="hecale-experiments.html#cb3-3" aria-hidden="true" tabindex="-1"></a>          time.of.day <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> cage<span class="sc">/</span>id),</span>
@@ -247,7 +247,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </tr>
 </tbody>
 </table>
-<p>No, there is no significant shift in preference for the colour that is rewarding in the morning between time periods initially when individuals are naive.</p>
+<p>We see there is no significant shift in preference for the colour that is rewarding in the morning between time periods initially when individuals are naive (p = 0.39 for time of day effect).</p>
 </div>
 <div id="model-residuals" class="section level5">
 <h5>Model Residuals</h5>
@@ -268,7 +268,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="model-1" class="section level5">
 <h5>Model</h5>
-<p>Is there a shift in preference for colours when individuals are trained</p>
+<p>Now we will be looking at butterflies after training and asking if there is a shift in preference for the colour that is rewarded in the morning based on the time of day when individuals are trained. We include an effect of final presentation.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="hecale-experiments.html#cb4-1" aria-hidden="true" tabindex="-1"></a>trained.model <span class="ot">=</span> </span>
 <span id="cb4-2"><a href="hecale-experiments.html#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glmer</span>(<span class="fu">cbind</span>(n.morning.colour.test, n.afternoon.colour.test) <span class="sc">~</span> </span>
 <span id="cb4-3"><a href="hecale-experiments.html#cb4-3" aria-hidden="true" tabindex="-1"></a>          time.of.day <span class="sc">*</span> final.presentation <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> cage<span class="sc">/</span>id), </span>
@@ -317,7 +317,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </tr>
 </tbody>
 </table>
-<p>We don’t find a significant shift as a result of time of day (p = 0.06) but the effect size is in the expected direction <em>i.e.</em> a decrease in the morning reward colour preference in the afternoon.</p>
+<p>We don’t find a significant shift as a result of time of day (p = 0.06) but the effect size is in the expected direction <em>i.e.</em>, a decrease in the morning reward colour preference in the afternoon. Moreover, we don’t see an effect of final presentation (p = 0.86) or an interaction effect of final presentation with time of day (p = 0.16)</p>
 </div>
 <div id="model-residuals-1" class="section level5">
 <h5>Model Residuals</h5>
@@ -327,16 +327,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="hecale-high-and-low-performers" class="section level2">
 <h2>Hecale high and low performers</h2>
-<p>We noticed considerable variation in how flexible individuals were during training <em>i.e.</em>, some individuals performed better during training compared to others. In order to see whether high performers showed more evidence of learning than low performers we looked at the initial and trained preferences of butterflies that made a majority (&gt;50%) of correct feeding choices in the final two training days in both the morning and afternoon as well as those that did not meet this criterion. The expectation is that high performers would show more evidence of shifting their preference throughout the day at the final test session.</p>
+<p>We noticed considerable variation in how flexible individuals were during training <em>i.e.</em>, some individuals performed better during training compared to others. In order to see whether high performers showed more evidence of learning than low performers, we looked at the initial and trained preferences of butterflies that made a majority (&gt;50%) of correct feeding choices in the final two training days in both the morning and afternoon as well as those that did not meet this criterion. The expectation is that high performers would show evidence of shifting their preference throughout the day at the final test session.</p>
 <div id="initial-preference-1" class="section level3">
 <h3>Initial preference</h3>
 <div id="high-performers" class="section level4">
 <h4>High Performers</h4>
-<p>First we will be looking at the shift in preference initially in naive butterflies that were high performers in the experiment. To do so we will remove individuals who did not achieve greater than 50% correct responses in the last 2 days of training</p>
+<p>First we will be looking at the shift in preference based on time of day initially in naive butterflies that were high performers in the experiment. To do so we will remove individuals who did not achieve greater than 50% correct responses in the last 2 days of training</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="hecale-experiments.html#cb5-1" aria-hidden="true" tabindex="-1"></a>data4 <span class="ot">=</span> data3 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="fu">all</span>(prop.correct.training.last<span class="fl">.2</span> <span class="sc">&gt;</span> <span class="fl">0.5</span>))</span></code></pre></div>
-<p>We ask whether individuals who perform well in last 2 days of training shift preference between the time periods initially.</p>
 <div id="model-2" class="section level5">
 <h5>Model</h5>
+<p>We now ask whether individuals who perform well in last 2 days of training shift colour preference between the time periods initially.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="hecale-experiments.html#cb6-1" aria-hidden="true" tabindex="-1"></a>naive.model.high.performers <span class="ot">=</span> </span>
 <span id="cb6-2"><a href="hecale-experiments.html#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glmer</span>(<span class="fu">cbind</span>(n.morning.colour.initial, n.afternoon.colour.initial) <span class="sc">~</span> </span>
 <span id="cb6-3"><a href="hecale-experiments.html#cb6-3" aria-hidden="true" tabindex="-1"></a>                                      time.of.day  <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> cage<span class="sc">/</span>id),</span>
@@ -371,7 +371,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </tr>
 </tbody>
 </table>
-<p>High performers do not significantly shift preference initially.</p>
+<p>We find no evidence of high performers shifting their colour preference based on time of day initially (p = 0.79)</p>
 </div>
 <div id="model-residuals-2" class="section level5">
 <h5>Model Residuals</h5>
@@ -380,11 +380,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="low-performers" class="section level4">
 <h4>Low Performers</h4>
-<p>Next we will look at individuals which under-performed during training so we extract individuals below the criterion.</p>
+<p>Next we look at individuals which under-performed during training so we extract individuals below the criterion.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="hecale-experiments.html#cb7-1" aria-hidden="true" tabindex="-1"></a>data5 <span class="ot">=</span> data3 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="fu">any</span>(prop.correct.training.last<span class="fl">.2</span> <span class="sc">&lt;</span> <span class="fl">0.51</span>))</span></code></pre></div>
-<p>We now ask do individuals who were incorrect at high rate shift preference initially? Note we include the line <code>control=glmerControl(optimizer="bobyqa",optCtrl=list(maxfun=2e5))</code> to change the optimizer since this model initially fails to converge.</p>
 <div id="model-3" class="section level5">
 <h5>Model</h5>
+<p>We now ask do individuals who did not make over 50% correct choices at the last 2 days of training shift their colour preference based on time of day initially? Note we include the line <code>control=glmerControl(optimizer="bobyqa",optCtrl=list(maxfun=2e5))</code> to change the optimizer since this model initially fails to converge.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="hecale-experiments.html#cb8-1" aria-hidden="true" tabindex="-1"></a>naive.model.low.performers <span class="ot">=</span> </span>
 <span id="cb8-2"><a href="hecale-experiments.html#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glmer</span>(<span class="fu">cbind</span>(n.morning.colour.initial, n.afternoon.colour.initial) <span class="sc">~</span> </span>
 <span id="cb8-3"><a href="hecale-experiments.html#cb8-3" aria-hidden="true" tabindex="-1"></a>          time.of.day <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> id), <span class="at">data =</span>data5, </span>
@@ -420,7 +420,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </tr>
 </tbody>
 </table>
-<p>Low performers also do not significantly shift their preference between time periods initially.</p>
+<p>Low performers like high performers do not significantly shift their colour preference based on the time of day between time periods initially (p = 0.26).</p>
 </div>
 <div id="model-residuals-3" class="section level5">
 <h5>Model Residuals</h5>
@@ -430,16 +430,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="trained-preference-1" class="section level3">
 <h3>Trained preference</h3>
-<p>Now we will look at trained preferences which were measured after 10 days of training.</p>
+<p>We next look at trained preferences which were measured after 10 days of training.</p>
 <div id="high-performers-1" class="section level4">
 <h4>High Performers</h4>
-<p>We first ask whether individuals who were correct at a high rate during training shift preference when trained. Note here the cage random effect was dropped due to it not capturing any variance leading to a singular fit.</p>
 <div id="model-4" class="section level5">
 <h5>Model</h5>
+<p>We first ask whether individuals who were correct at a higher rate during training shifted their colour preference based on the time of day when trained. Note here the cage random effect was dropped due to it not capturing any variance leading to a singular fit.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="hecale-experiments.html#cb9-1" aria-hidden="true" tabindex="-1"></a>trained.model.high.performers <span class="ot">=</span> </span>
 <span id="cb9-2"><a href="hecale-experiments.html#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glmer</span>(<span class="fu">cbind</span>(n.morning.colour.test, n.afternoon.colour.test) <span class="sc">~</span> </span>
 <span id="cb9-3"><a href="hecale-experiments.html#cb9-3" aria-hidden="true" tabindex="-1"></a>          time.of.day <span class="sc">*</span> final.presentation <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> id), </span>
-<span id="cb9-4"><a href="hecale-experiments.html#cb9-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">data=</span>  data4, <span class="at">family =</span> binomial)</span></code></pre></div>
+<span id="cb9-4"><a href="hecale-experiments.html#cb9-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> data4, <span class="at">family =</span> binomial)</span></code></pre></div>
 </div>
 <div id="results-4" class="section level5">
 <h5>Results</h5>
@@ -484,7 +484,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </tr>
 </tbody>
 </table>
-<p>We find that there is a significant shift in preference for the morning colour between time periods among high performing butterflies. When trained these butterflies shift their preference for the morning reward colour by 12% (Figure <a href="hecale-experiments.html#fig:learning-data-plot">1</a>).</p>
+<p>We find that there is a significant shift in preference for the morning colour between time periods among high performing butterflies (p = 0.01). When trained these butterflies shift their preference for the morning reward colour by 12% (Figure <a href="hecale-experiments.html#fig:learning-data-plot">1</a>).</p>
 <div class="figure"><span id="fig:learning-data-plot"></span>
 <img src="Analysis-for-Heliconiini-time-learning_files/figure-html/learning-data-plot-1.png" alt="Data from colour preference trials of H. hecale meeting the training criterion. (A) Naïve preferences in the morning and afternoon. (B) Preferences of butterflies from (A) post-training. Grey lines connect individuals. Data are means ± 95% CI." width="672" />
 <p class="caption">

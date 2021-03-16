@@ -1,4 +1,5 @@
 fig:learning-data-plot
 fig:activity-data-plot
 fig:dryas-learning-data-plot
+fig:dryas-learning-data-plot-low-performers
 fig:dryas-activity-data-plot

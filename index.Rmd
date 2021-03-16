@@ -13,8 +13,10 @@ description: ""
 
 This site contains the code, model outputs, and data tables for the analyses in the manuscript <span style="text-decoration:underline">'Heliconiini butterflies can learn time-dependent reward associations'</span>
 
-The raw data used to conduct these analyses are available at the [github repository for this site](https://github.com/wyatt-toure/butterfly-learning/blob/main/heliconiini-data.csv). 
+The raw data used to conduct these analyses are available in the file [heliconiini-data.csv](https://github.com/wyatt-toure/butterfly-learning/blob/main/heliconiini-data.csv). 
 
-The raw R code for the *H. hecale* analysis is located in 02-hecale-analysis.Rmd and the code for the *D. iulia* analysis is located in the 03-dryas-analysis.Rmd
+The raw R code for the *H. hecale* analysis is located in the file [02-hecale-analysis.Rmd](https://github.com/wyatt-toure/butterfly-learning/blob/main/02-hecale-analysis.Rmd)
+
+The raw R code for the *D. iulia* analysis is located in the file [03-dryas-analysis.Rmd](https://github.com/wyatt-toure/butterfly-learning/blob/main/03-dryas-analysis.Rmd).
 
 ![](images/hecale-sample.gif)
