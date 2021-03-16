@@ -1,8 +1,8 @@
 # Analysis for 'Heliconiini butterflies can learn time-dependent reward associations'
 
 This is the GitHub repository containing the data and code for the analysis conducted in the manuscript ‘Heliconiini butterflies can learn time-dependent reward associations’. You can find a link to the site which walks through the analysis described in the main text [here](https://wyatt-toure.github.io/butterfly-learning). This repository contains all the code to produce the analyses and figures in the manuscript. The code to produce the supplementary results and figures are in the ESM-code folder. 
-The code for the *Heliconius hecale* analysis is located in the file [02-hecale-analysis.Rmd](https://github.com/wyatt-toure/butterfly-learning/blob/main/02-hecale-analysis.Rmd)
-The code for the *Dryas iulia* analysis is located in the file [03-dryas-analysis.Rmd](https://github.com/wyatt-toure/butterfly-learning/blob/main/03-dryas-analysis.Rmd)
+The code for the *Heliconius hecale* analysis is located in the file [01-hecale-analysis.Rmd](https://github.com/wyatt-toure/butterfly-learning/blob/main/01-hecale-analysis.Rmd)
+The code for the *Dryas iulia* analysis is located in the file [02-dryas-analysis.Rmd](https://github.com/wyatt-toure/butterfly-learning/blob/main/02-dryas-analysis.Rmd)
 
 ## Website
 
