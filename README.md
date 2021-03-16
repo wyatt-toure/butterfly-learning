@@ -10,6 +10,8 @@ The code for the *Heliconius hecale* analysis is located in the file [01-hecale-
 
 The code for the *Dryas iulia* analysis is located in the file [02-dryas-analysis.Rmd](https://github.com/wyatt-toure/butterfly-learning/blob/main/02-dryas-analysis.Rmd)
 
+Below I additionally present the [metadata](#metadata) for the dataset and the [packages required](#required-tools-and-references) to conduct the analyses and construct the as well as their versions, and citations. 
+
 ## Website
 
 https://wyatt-toure.github.io/butterfly-learning
@@ -45,9 +47,8 @@ Data: [heliconiini-data.csv](https://github.com/wyatt-toure/butterfly-learning/b
 | colour.training.scheme           | The time of day at which particular colours were rewarding                                                                           |
 
 
+## Required tools and references
 <div id="tools-used-and-references" class="section level1">
-<h1>Required tools and references</h1>
-<p>A complete list of the tools used to produce the analysis and website, as well as their versions, is produced below:</p>
 <table>
 <colgroup>
 <col width="4%" />
