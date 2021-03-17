@@ -21,7 +21,7 @@
   
   
 
-<meta name="author" content="Wyatt Toure" />
+<meta name="author" content="M. Wyatt Toure" />
 
 
 
@@ -135,7 +135,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Background</a></li>
 <li class="chapter" data-level="" data-path="hecale-experiments.html"><a href="hecale-experiments.html"><i class="fa fa-check"></i>Hecale experiments</a>
 <ul>
-<li class="chapter" data-level="" data-path="hecale-experiments.html"><a href="hecale-experiments.html#hecale-all-individuals"><i class="fa fa-check"></i>Hecale all individuals</a>
+<li class="chapter" data-level="" data-path="hecale-experiments.html"><a href="hecale-experiments.html#full-model"><i class="fa fa-check"></i>Full model</a></li>
+<li class="chapter" data-level="" data-path="hecale-experiments.html"><a href="hecale-experiments.html#hecale-all-participating-individuals"><i class="fa fa-check"></i>Hecale all participating individuals</a>
 <ul>
 <li class="chapter" data-level="" data-path="hecale-experiments.html"><a href="hecale-experiments.html#initial-preference"><i class="fa fa-check"></i>Initial preference</a></li>
 <li class="chapter" data-level="" data-path="hecale-experiments.html"><a href="hecale-experiments.html#trained-preference"><i class="fa fa-check"></i>Trained preference</a></li>
@@ -149,7 +150,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="" data-path="dryas-experiments.html"><a href="dryas-experiments.html"><i class="fa fa-check"></i>Dryas experiments</a>
 <ul>
-<li class="chapter" data-level="" data-path="dryas-experiments.html"><a href="dryas-experiments.html#dryas-all-individuals"><i class="fa fa-check"></i>Dryas all individuals</a>
+<li class="chapter" data-level="" data-path="dryas-experiments.html"><a href="dryas-experiments.html#dryas-all-participating-individuals"><i class="fa fa-check"></i>Dryas all participating individuals</a>
 <ul>
 <li class="chapter" data-level="" data-path="dryas-experiments.html"><a href="dryas-experiments.html#initial-preference-2"><i class="fa fa-check"></i>Initial preference</a></li>
 </ul></li>
@@ -181,19 +182,356 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="hecale-experiments" class="section level1">
 <h1>Hecale experiments</h1>
+<div id="full-model" class="section level2">
+<h2>Full model</h2>
+<p>In a first pass I looked at a full model, with all butterflies I had data for, which asked whether butterflies shift their preference for the colour that is rewarding in the morning based on the time of day after being trained to either purple or yellow in either the morning or afternoon. I also included random effects of cage and individual ID.</p>
+<div id="variables" class="section level5">
+<h5>Variables</h5>
+<ul>
+<li><p><code>cbind(n.morning.colour, n.afternoon.colour)</code> The proportional preference for the colour rewarding in the morning</p></li>
+<li><p><code>time.of.day</code> The time of day at which a trial was conducted. Either ‘morning’ (8 am to 10 am) or ‘afternoon’ (3pm to 5pm)</p></li>
+<li><p><code>training</code> The training status of a butterfly. Either ‘trained’ or ‘untrained.’</p></li>
+<li><p><code>final.presentation</code> The order of the presentation of the final preference test. Either ‘normal’ (morning test then afternoon test) or ‘reversed’ (afternoon test then morning test)</p></li>
+<li><p><code>cage</code> The identity of the cage in which the butterfly was trained and tested</p></li>
+<li><p><code>id</code> The individual identitiy of the butterfly</p></li>
+</ul>
+</div>
+<div id="model" class="section level5">
+<h5>Model</h5>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="hecale-experiments.html#cb1-1" aria-hidden="true" tabindex="-1"></a>full.model <span class="ot">=</span> </span>
+<span id="cb1-2"><a href="hecale-experiments.html#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glmer</span>(<span class="fu">cbind</span>(n.morning.colour, n.afternoon.colour) <span class="sc">~</span> </span>
+<span id="cb1-3"><a href="hecale-experiments.html#cb1-3" aria-hidden="true" tabindex="-1"></a>          time.of.day <span class="sc">*</span> training <span class="sc">*</span> final.presentation <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> cage<span class="sc">/</span>id),</span>
+<span id="cb1-4"><a href="hecale-experiments.html#cb1-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> long.heliconiini.data, </span>
+<span id="cb1-5"><a href="hecale-experiments.html#cb1-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">control=</span><span class="fu">glmerControl</span>(<span class="at">optimizer=</span><span class="st">&quot;bobyqa&quot;</span>,<span class="at">optCtrl=</span><span class="fu">list</span>(<span class="at">maxfun=</span><span class="fl">2e5</span>)),</span>
+<span id="cb1-6"><a href="hecale-experiments.html#cb1-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">family =</span> binomial)</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+Factor
+</th>
+<th style="text-align:right;">
+Estimate
+</th>
+<th style="text-align:right;">
+Std_Error
+</th>
+<th style="text-align:right;">
+T_statistic
+</th>
+<th style="text-align:left;">
+P_value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Intercept
+</td>
+<td style="text-align:right;">
+-1.118
+</td>
+<td style="text-align:right;">
+0.413
+</td>
+<td style="text-align:right;">
+-2.708
+</td>
+<td style="text-align:left;">
+0.007
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Time of Day
+</td>
+<td style="text-align:right;">
+0.644
+</td>
+<td style="text-align:right;">
+0.254
+</td>
+<td style="text-align:right;">
+2.532
+</td>
+<td style="text-align:left;">
+0.011
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Training
+</td>
+<td style="text-align:right;">
+1.433
+</td>
+<td style="text-align:right;">
+0.197
+</td>
+<td style="text-align:right;">
+7.265
+</td>
+<td style="text-align:left;">
+&lt; .001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Final Presentation
+</td>
+<td style="text-align:right;">
+2.003
+</td>
+<td style="text-align:right;">
+0.572
+</td>
+<td style="text-align:right;">
+3.502
+</td>
+<td style="text-align:left;">
+&lt; .001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Time of Day X Training
+</td>
+<td style="text-align:right;">
+-0.954
+</td>
+<td style="text-align:right;">
+0.291
+</td>
+<td style="text-align:right;">
+-3.281
+</td>
+<td style="text-align:left;">
+0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Time of Day X Final Presentation
+</td>
+<td style="text-align:right;">
+-0.865
+</td>
+<td style="text-align:right;">
+0.287
+</td>
+<td style="text-align:right;">
+-3.017
+</td>
+<td style="text-align:left;">
+0.003
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Training X Final Presentation
+</td>
+<td style="text-align:right;">
+-1.607
+</td>
+<td style="text-align:right;">
+0.224
+</td>
+<td style="text-align:right;">
+-7.185
+</td>
+<td style="text-align:left;">
+&lt; .001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Time of Day X Training X Final Presentation
+</td>
+<td style="text-align:right;">
+0.720
+</td>
+<td style="text-align:right;">
+0.331
+</td>
+<td style="text-align:right;">
+2.178
+</td>
+<td style="text-align:left;">
+0.029
+</td>
+</tr>
+</tbody>
+</table>
+<p>There is a significant three-way interaction effect between the time of day, presentation order of the final test and the training status of butterflies (p = 0.029).</p>
+<p>Note also that we see more variance among individuals than among cages (individual σ = 1.153, cage σ = 0.202), which suggests individuals are not copying each other. We might have expected individuals to conform to their cage-mates’ choices if butterflies were using social cues leading to more variance among cages than among individuals however we do not see evidence for this.</p>
+</div>
+<div id="post-hoc-tests" class="section level5">
+<h5>Post-Hoc Tests</h5>
+<p>To investigate the nature of these interactions post-hoc I used <a href="https://cran.r-project.org/web/packages/emmeans/index.html"><code>emmeans</code></a>. I was interested in whether training induced a time of day based shift in colour preference. Therefore, I wanted to see if there is a decrease in preference for the colour rewarding in the morning from morning to afternoon after training for <em>both</em> normal and reversed butterflies.</p>
+<p>If butterflies were only learning the order of presentation we would expect to see an increase in preference for the colour rewarding in the morning from morning to afternoon since these butterflies were presented with their first final test session in the afternoon.</p>
+<p>To investigate a time-based shift in preference across these treatments I used simple contrasts based on the factor time of day.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="hecale-experiments.html#cb2-1" aria-hidden="true" tabindex="-1"></a>full.model.emm <span class="ot">=</span> </span>
+<span id="cb2-2"><a href="hecale-experiments.html#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">emmeans</span>(full.model, <span class="sc">~</span> training <span class="sc">*</span> time.of.day <span class="sc">*</span> final.presentation)</span>
+<span id="cb2-3"><a href="hecale-experiments.html#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="hecale-experiments.html#cb2-4" aria-hidden="true" tabindex="-1"></a>time.of.day.contrast <span class="ot">=</span></span>
+<span id="cb2-5"><a href="hecale-experiments.html#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">contrast</span>(full.model.emm, </span>
+<span id="cb2-6"><a href="hecale-experiments.html#cb2-6" aria-hidden="true" tabindex="-1"></a>           <span class="st">&quot;consec&quot;</span>, </span>
+<span id="cb2-7"><a href="hecale-experiments.html#cb2-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">simple =</span> <span class="st">&quot;time.of.day&quot;</span>, </span>
+<span id="cb2-8"><a href="hecale-experiments.html#cb2-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">combine =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb2-9"><a href="hecale-experiments.html#cb2-9" aria-hidden="true" tabindex="-1"></a>           <span class="at">adjust =</span> <span class="st">&quot;mvt&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">summary</span>(<span class="at">infer =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+</div>
+<div id="results" class="section level5">
+<h5>Results</h5>
+<table>
+<caption>
+<span id="tab:contrasts-table">Table 1: </span>Table of post-hoc tests with a multivariate-t adjustment for multiple comparisons of a selected set of means. The contrasts represent the shift in preference for the colour rewarding in the morning based on the time of day, in this case the preference for the colour rewarding in the morning during the afternoon test session is subtracted by the preference for the colour rewarding in the morning during the morning test session. Training represents whether these tests were done prior to training on naive butterflies (untrained) or after training (trained). Values are all rounded to 3 decimal places.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+contrast
+</th>
+<th style="text-align:left;">
+training
+</th>
+<th style="text-align:left;">
+final.presentation
+</th>
+<th style="text-align:right;">
+estimate
+</th>
+<th style="text-align:right;">
+asymp.LCL
+</th>
+<th style="text-align:right;">
+asymp.UCL
+</th>
+<th style="text-align:left;">
+p.value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Afternoon - Morning
+</td>
+<td style="text-align:left;">
+Untrained
+</td>
+<td style="text-align:left;">
+normal
+</td>
+<td style="text-align:right;">
+0.644
+</td>
+<td style="text-align:right;">
+0.146
+</td>
+<td style="text-align:right;">
+1.142
+</td>
+<td style="text-align:left;">
+0.011
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Afternoon - Morning
+</td>
+<td style="text-align:left;">
+Trained
+</td>
+<td style="text-align:left;">
+normal
+</td>
+<td style="text-align:right;">
+-0.310
+</td>
+<td style="text-align:right;">
+-0.610
+</td>
+<td style="text-align:right;">
+-0.009
+</td>
+<td style="text-align:left;">
+0.044
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Afternoon - Morning
+</td>
+<td style="text-align:left;">
+Untrained
+</td>
+<td style="text-align:left;">
+reversed
+</td>
+<td style="text-align:right;">
+-0.221
+</td>
+<td style="text-align:right;">
+-0.481
+</td>
+<td style="text-align:right;">
+0.039
+</td>
+<td style="text-align:left;">
+0.095
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Afternoon - Morning
+</td>
+<td style="text-align:left;">
+Trained
+</td>
+<td style="text-align:left;">
+reversed
+</td>
+<td style="text-align:right;">
+-0.455
+</td>
+<td style="text-align:right;">
+-0.631
+</td>
+<td style="text-align:right;">
+-0.279
+</td>
+<td style="text-align:left;">
+&lt; .001
+</td>
+</tr>
+</tbody>
+</table>
+<p></br></p>
+<p>Final test presentation order should have no bearing on naive data during the untrained test trial since it is only relevant for the final test trial, nevertheless I present the naive results for both groups when untrained. When untrained, naive butterflies with a normal final test presentation order significantly shift their preference in the <em>incorrect</em> direction by 13.73% (p = 0.011), that is they increase their preference for the colour rewarding in the morning during the afternoon trial. Naive butterflies with a reversed presentation order do not significantly shift their preference (p = 0.095) between time periods when untrained.</p>
+<p>For both normal and reversed final test presentation order butterflies, there is a decrease in preference for the colour rewarding in the morning from morning to afternoon after training. Butterflies with a standard presentation order decrease their preference for the colour rewarded in the morning by 7.68% (p = 0.043) in the afternoon and butterflies with a reversed final test presentation order decrease their preference for the colour rewarded in the morning by 10.7% (p &lt; 0.001) in the afternoon.</p>
+<div class="figure"><span id="fig:interaction-plot"></span>
+<img src="Analysis-for-Heliconiini-time-learning_files/figure-html/interaction-plot-1.png" alt="Model estimates on the scale of the response variable displaying the interaction effects. Dots represent estimated means and lines connect means across time periods. Naive butterflies either do not shit their preference for the colour rewearded in the morning between time periods (reversed final test order butterflies) or significantly increase their preference for the colour rewarded in the morning in the afternoon (the incorrect direction). Trained butterflies decrease their preference for the colour rewarding in the morning in the afternoon after training in both final presentation order treatments." width="672" />
+<p class="caption">
+Figure 1: Model estimates on the scale of the response variable displaying the interaction effects. Dots represent estimated means and lines connect means across time periods. Naive butterflies either do not shit their preference for the colour rewearded in the morning between time periods (reversed final test order butterflies) or significantly increase their preference for the colour rewarded in the morning in the afternoon (the incorrect direction). Trained butterflies decrease their preference for the colour rewarding in the morning in the afternoon after training in both final presentation order treatments.
+</p>
+</div>
+<p>So in our full model we see there is a lot going on. I wanted to break it down even further.</p>
+</div>
+</div>
+<div id="hecale-all-participating-individuals" class="section level2">
+<h2>Hecale all participating individuals</h2>
 <p>Across analyses on <em>H. hecale</em> learning performance we asked whether the time of day influenced:</p>
 <ol style="list-style-type: lower-alpha">
 <li><p>In subsections titled <strong>Initial preference</strong> - the shifts in proportional preference for the colour rewarding in the morning when naïve, using a binomial GLMM with response variable “morning reward colour choices/afternoon reward colour choices” and fixed factor “time of day” (morning or afternoon);</p></li>
 <li><p>In subsections titled <strong>Trained preference</strong> - shifts in proportional colour preference when trained, using the same specifications but with the additional fixed factor “presentation order” (standard or reversed).</p></li>
 </ol>
 <p>Identity was included as a random effect throughout as well as cage if it did not lead to a singular fit due to no variance being captured by the variable.</p>
-<div id="hecale-all-individuals" class="section level2">
-<h2>Hecale all individuals</h2>
-<p>We initially looked at all individuals—excluding those which did not attempt to feed from both feeders in AM or, more commonly, PM during training (see Hecale activity between time periods section), or did not make any foraging attempts during a final test session. We also established a training criterion given observed variation in responsiveness to the learning task throughout training. We identified individuals that correctly adjusted their behaviour in AM and PM sessions during training with reinforced feeders and in the <a href="hecale-experiments.html#hecale-high-and-low-performers">Hecale high and low performers section</a> asked whether these individuals demonstrate evidence of learning by behaving in the same way when presented with unreinforced feeders in the post-training preference test.</p>
+<p>We looked at all individuals—excluding those which did not attempt to feed from both feeders in AM or, more commonly, PM during training (see <a href="hecale-experiments.html#hecale-activity-between-time-periods">Hecale activity between time periods section</a>), or did not make any foraging attempts during a final test session. We also established a training criterion given observed variation in responsiveness to the learning task throughout training. We identified individuals that correctly adjusted their behaviour in AM and PM sessions during training with reinforced feeders and in the <a href="hecale-experiments.html#hecale-high-and-low-performers">Hecale high and low performers section</a> asked whether these individuals demonstrate evidence of learning by behaving in the same way when presented with unreinforced feeders in the post-training preference test.</p>
 <div id="initial-preference" class="section level3">
 <h3>Initial preference</h3>
 <p>This model asks whether there is a shift in preference for the colour that is rewarding in the morning between time periods.</p>
-<div id="variables" class="section level5">
+<div id="variables-1" class="section level5">
 <h5>Variables</h5>
 <ul>
 <li><code>n.morning.colour.initial</code> is the number of choices made for the colour that is rewarding in the morning</li>
@@ -202,23 +540,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><code>id</code> is the identity of the individual butterfly</li>
 </ul>
 <p>First we remove any individuals who did not make both colour choices in either morning or afternoon during training.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="hecale-experiments.html#cb1-1" aria-hidden="true" tabindex="-1"></a>data2 <span class="ot">=</span> data <span class="sc">%&gt;%</span> </span>
-<span id="cb1-2"><a href="hecale-experiments.html#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-3"><a href="hecale-experiments.html#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">all</span>(n.correct.training <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">&amp;</span> n.incorrect.training <span class="sc">&gt;</span> <span class="dv">0</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="hecale-experiments.html#cb3-1" aria-hidden="true" tabindex="-1"></a>data2 <span class="ot">=</span> data <span class="sc">%&gt;%</span> </span>
+<span id="cb3-2"><a href="hecale-experiments.html#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-3"><a href="hecale-experiments.html#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">all</span>(n.correct.training <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">&amp;</span> n.incorrect.training <span class="sc">&gt;</span> <span class="dv">0</span>))</span></code></pre></div>
 <p>Then we remove individuals who did not respond at all during a session at the final test.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="hecale-experiments.html#cb2-1" aria-hidden="true" tabindex="-1"></a>data3 <span class="ot">=</span> data2 <span class="sc">%&gt;%</span> </span>
-<span id="cb2-2"><a href="hecale-experiments.html#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-3"><a href="hecale-experiments.html#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">all</span>(n.morning.colour.test <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">|</span> n.afternoon.colour.test <span class="sc">&gt;</span> <span class="dv">0</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="hecale-experiments.html#cb4-1" aria-hidden="true" tabindex="-1"></a>data3 <span class="ot">=</span> data2 <span class="sc">%&gt;%</span> </span>
+<span id="cb4-2"><a href="hecale-experiments.html#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-3"><a href="hecale-experiments.html#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">all</span>(n.morning.colour.test <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">|</span> n.afternoon.colour.test <span class="sc">&gt;</span> <span class="dv">0</span>))</span></code></pre></div>
 </div>
-<div id="model" class="section level5">
+<div id="model-1" class="section level5">
 <h5>Model</h5>
 <p>We now ask with a binomial GLMM whether there a shift in preference for colours when individuals were naive.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="hecale-experiments.html#cb3-1" aria-hidden="true" tabindex="-1"></a>naive.model <span class="ot">=</span> </span>
-<span id="cb3-2"><a href="hecale-experiments.html#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glmer</span>(<span class="fu">cbind</span>(n.morning.colour.initial, n.afternoon.colour.initial) <span class="sc">~</span> </span>
-<span id="cb3-3"><a href="hecale-experiments.html#cb3-3" aria-hidden="true" tabindex="-1"></a>          time.of.day <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> cage<span class="sc">/</span>id),</span>
-<span id="cb3-4"><a href="hecale-experiments.html#cb3-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> data3, <span class="at">family =</span> binomial)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="hecale-experiments.html#cb5-1" aria-hidden="true" tabindex="-1"></a>naive.model <span class="ot">=</span> </span>
+<span id="cb5-2"><a href="hecale-experiments.html#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glmer</span>(<span class="fu">cbind</span>(n.morning.colour.initial, n.afternoon.colour.initial) <span class="sc">~</span> </span>
+<span id="cb5-3"><a href="hecale-experiments.html#cb5-3" aria-hidden="true" tabindex="-1"></a>          time.of.day <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> cage<span class="sc">/</span>id),</span>
+<span id="cb5-4"><a href="hecale-experiments.html#cb5-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> data3, <span class="at">family =</span> binomial)</span></code></pre></div>
 </div>
-<div id="results" class="section level5">
+<div id="results-1" class="section level5">
 <h5>Results</h5>
 <table>
 <thead>
@@ -251,12 +589,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="model-residuals" class="section level5">
 <h5>Model Residuals</h5>
-<p><img src="Analysis-for-Heliconiini-time-learning_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="Analysis-for-Heliconiini-time-learning_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 </div>
 </div>
 <div id="trained-preference" class="section level3">
 <h3>Trained preference</h3>
-<div id="variables-1" class="section level5">
+<div id="variables-2" class="section level5">
 <h5>Variables</h5>
 <ul>
 <li><code>n.morning.colour.test</code> is the number of choices made for the colour that is rewarding in the morning during the final test</li>
@@ -266,15 +604,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><code>id</code> is the identity of the individual butterfly</li>
 </ul>
 </div>
-<div id="model-1" class="section level5">
+<div id="model-2" class="section level5">
 <h5>Model</h5>
 <p>Now we will be looking at butterflies after training and asking if there is a shift in preference for the colour that is rewarded in the morning based on the time of day when individuals are trained. We include an effect of final presentation.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="hecale-experiments.html#cb4-1" aria-hidden="true" tabindex="-1"></a>trained.model <span class="ot">=</span> </span>
-<span id="cb4-2"><a href="hecale-experiments.html#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glmer</span>(<span class="fu">cbind</span>(n.morning.colour.test, n.afternoon.colour.test) <span class="sc">~</span> </span>
-<span id="cb4-3"><a href="hecale-experiments.html#cb4-3" aria-hidden="true" tabindex="-1"></a>          time.of.day <span class="sc">*</span> final.presentation <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> cage<span class="sc">/</span>id), </span>
-<span id="cb4-4"><a href="hecale-experiments.html#cb4-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> data3, <span class="at">family =</span> binomial)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="hecale-experiments.html#cb6-1" aria-hidden="true" tabindex="-1"></a>trained.model <span class="ot">=</span> </span>
+<span id="cb6-2"><a href="hecale-experiments.html#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glmer</span>(<span class="fu">cbind</span>(n.morning.colour.test, n.afternoon.colour.test) <span class="sc">~</span> </span>
+<span id="cb6-3"><a href="hecale-experiments.html#cb6-3" aria-hidden="true" tabindex="-1"></a>          time.of.day <span class="sc">*</span> final.presentation <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> cage<span class="sc">/</span>id), </span>
+<span id="cb6-4"><a href="hecale-experiments.html#cb6-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> data3, <span class="at">family =</span> binomial)</span></code></pre></div>
 </div>
-<div id="results-1" class="section level5">
+<div id="results-2" class="section level5">
 <h5>Results</h5>
 <table>
 <thead>
@@ -321,7 +659,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="model-residuals-1" class="section level5">
 <h5>Model Residuals</h5>
-<p><img src="Analysis-for-Heliconiini-time-learning_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><img src="Analysis-for-Heliconiini-time-learning_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 </div>
 </div>
 </div>
@@ -333,16 +671,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="high-performers" class="section level4">
 <h4>High Performers</h4>
 <p>First we will be looking at the shift in preference based on time of day initially in naive butterflies that were high performers in the experiment. To do so we will remove individuals who did not achieve greater than 50% correct responses in the last 2 days of training</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="hecale-experiments.html#cb5-1" aria-hidden="true" tabindex="-1"></a>data4 <span class="ot">=</span> data3 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="fu">all</span>(prop.correct.training.last<span class="fl">.2</span> <span class="sc">&gt;</span> <span class="fl">0.5</span>))</span></code></pre></div>
-<div id="model-2" class="section level5">
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="hecale-experiments.html#cb7-1" aria-hidden="true" tabindex="-1"></a>data4 <span class="ot">=</span> data3 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="fu">all</span>(prop.correct.training.last<span class="fl">.2</span> <span class="sc">&gt;</span> <span class="fl">0.5</span>))</span></code></pre></div>
+<div id="model-3" class="section level5">
 <h5>Model</h5>
 <p>We now ask whether individuals who perform well in last 2 days of training shift colour preference between the time periods initially.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="hecale-experiments.html#cb6-1" aria-hidden="true" tabindex="-1"></a>naive.model.high.performers <span class="ot">=</span> </span>
-<span id="cb6-2"><a href="hecale-experiments.html#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glmer</span>(<span class="fu">cbind</span>(n.morning.colour.initial, n.afternoon.colour.initial) <span class="sc">~</span> </span>
-<span id="cb6-3"><a href="hecale-experiments.html#cb6-3" aria-hidden="true" tabindex="-1"></a>                                      time.of.day  <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> cage<span class="sc">/</span>id),</span>
-<span id="cb6-4"><a href="hecale-experiments.html#cb6-4" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">data=</span> data4, <span class="at">family =</span> binomial)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="hecale-experiments.html#cb8-1" aria-hidden="true" tabindex="-1"></a>naive.model.high.performers <span class="ot">=</span> </span>
+<span id="cb8-2"><a href="hecale-experiments.html#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glmer</span>(<span class="fu">cbind</span>(n.morning.colour.initial, n.afternoon.colour.initial) <span class="sc">~</span> </span>
+<span id="cb8-3"><a href="hecale-experiments.html#cb8-3" aria-hidden="true" tabindex="-1"></a>                                      time.of.day  <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> cage<span class="sc">/</span>id),</span>
+<span id="cb8-4"><a href="hecale-experiments.html#cb8-4" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">data=</span> data4, <span class="at">family =</span> binomial)</span></code></pre></div>
 </div>
-<div id="results-2" class="section level5">
+<div id="results-3" class="section level5">
 <h5>Results</h5>
 <table>
 <thead>
@@ -375,23 +713,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="model-residuals-2" class="section level5">
 <h5>Model Residuals</h5>
-<p><img src="Analysis-for-Heliconiini-time-learning_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p><img src="Analysis-for-Heliconiini-time-learning_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 </div>
 </div>
 <div id="low-performers" class="section level4">
 <h4>Low Performers</h4>
 <p>Next we look at individuals which under-performed during training so we extract individuals below the criterion.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="hecale-experiments.html#cb7-1" aria-hidden="true" tabindex="-1"></a>data5 <span class="ot">=</span> data3 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="fu">any</span>(prop.correct.training.last<span class="fl">.2</span> <span class="sc">&lt;</span> <span class="fl">0.51</span>))</span></code></pre></div>
-<div id="model-3" class="section level5">
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="hecale-experiments.html#cb9-1" aria-hidden="true" tabindex="-1"></a>data5 <span class="ot">=</span> data3 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="fu">any</span>(prop.correct.training.last<span class="fl">.2</span> <span class="sc">&lt;</span> <span class="fl">0.51</span>))</span></code></pre></div>
+<div id="model-4" class="section level5">
 <h5>Model</h5>
 <p>We now ask do individuals who did not make over 50% correct choices at the last 2 days of training shift their colour preference based on time of day initially? Note we include the line <code>control=glmerControl(optimizer="bobyqa",optCtrl=list(maxfun=2e5))</code> to change the optimizer since this model initially fails to converge.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="hecale-experiments.html#cb8-1" aria-hidden="true" tabindex="-1"></a>naive.model.low.performers <span class="ot">=</span> </span>
-<span id="cb8-2"><a href="hecale-experiments.html#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glmer</span>(<span class="fu">cbind</span>(n.morning.colour.initial, n.afternoon.colour.initial) <span class="sc">~</span> </span>
-<span id="cb8-3"><a href="hecale-experiments.html#cb8-3" aria-hidden="true" tabindex="-1"></a>          time.of.day <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> id), <span class="at">data =</span>data5, </span>
-<span id="cb8-4"><a href="hecale-experiments.html#cb8-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">family =</span> binomial, </span>
-<span id="cb8-5"><a href="hecale-experiments.html#cb8-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">control=</span><span class="fu">glmerControl</span>(<span class="at">optimizer=</span><span class="st">&quot;bobyqa&quot;</span>,<span class="at">optCtrl=</span><span class="fu">list</span>(<span class="at">maxfun=</span><span class="fl">2e5</span>)))</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="hecale-experiments.html#cb10-1" aria-hidden="true" tabindex="-1"></a>naive.model.low.performers <span class="ot">=</span> </span>
+<span id="cb10-2"><a href="hecale-experiments.html#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glmer</span>(<span class="fu">cbind</span>(n.morning.colour.initial, n.afternoon.colour.initial) <span class="sc">~</span> </span>
+<span id="cb10-3"><a href="hecale-experiments.html#cb10-3" aria-hidden="true" tabindex="-1"></a>          time.of.day <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> id), <span class="at">data =</span>data5, </span>
+<span id="cb10-4"><a href="hecale-experiments.html#cb10-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">family =</span> binomial, </span>
+<span id="cb10-5"><a href="hecale-experiments.html#cb10-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">control=</span><span class="fu">glmerControl</span>(<span class="at">optimizer=</span><span class="st">&quot;bobyqa&quot;</span>,<span class="at">optCtrl=</span><span class="fu">list</span>(<span class="at">maxfun=</span><span class="fl">2e5</span>)))</span></code></pre></div>
 </div>
-<div id="results-3" class="section level5">
+<div id="results-4" class="section level5">
 <h5>Results</h5>
 <table>
 <thead>
@@ -424,7 +762,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="model-residuals-3" class="section level5">
 <h5>Model Residuals</h5>
-<p><img src="Analysis-for-Heliconiini-time-learning_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p><img src="Analysis-for-Heliconiini-time-learning_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
 </div>
 </div>
 </div>
@@ -433,15 +771,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>We next look at trained preferences which were measured after 10 days of training.</p>
 <div id="high-performers-1" class="section level4">
 <h4>High Performers</h4>
-<div id="model-4" class="section level5">
+<div id="model-5" class="section level5">
 <h5>Model</h5>
 <p>We first ask whether individuals who were correct at a higher rate during training shifted their colour preference based on the time of day when trained. Note here the cage random effect was dropped due to it not capturing any variance leading to a singular fit.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="hecale-experiments.html#cb9-1" aria-hidden="true" tabindex="-1"></a>trained.model.high.performers <span class="ot">=</span> </span>
-<span id="cb9-2"><a href="hecale-experiments.html#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glmer</span>(<span class="fu">cbind</span>(n.morning.colour.test, n.afternoon.colour.test) <span class="sc">~</span> </span>
-<span id="cb9-3"><a href="hecale-experiments.html#cb9-3" aria-hidden="true" tabindex="-1"></a>          time.of.day <span class="sc">*</span> final.presentation <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> id), </span>
-<span id="cb9-4"><a href="hecale-experiments.html#cb9-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> data4, <span class="at">family =</span> binomial)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="hecale-experiments.html#cb11-1" aria-hidden="true" tabindex="-1"></a>trained.model.high.performers <span class="ot">=</span> </span>
+<span id="cb11-2"><a href="hecale-experiments.html#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glmer</span>(<span class="fu">cbind</span>(n.morning.colour.test, n.afternoon.colour.test) <span class="sc">~</span> </span>
+<span id="cb11-3"><a href="hecale-experiments.html#cb11-3" aria-hidden="true" tabindex="-1"></a>          time.of.day <span class="sc">*</span> final.presentation <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> id), </span>
+<span id="cb11-4"><a href="hecale-experiments.html#cb11-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> data4, <span class="at">family =</span> binomial)</span></code></pre></div>
 </div>
-<div id="results-4" class="section level5">
+<div id="results-5" class="section level5">
 <h5>Results</h5>
 <table>
 <thead>
@@ -484,30 +822,30 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </tr>
 </tbody>
 </table>
-<p>We find that there is a significant shift in preference for the morning colour between time periods among high performing butterflies (p = 0.01). When trained these butterflies shift their preference for the morning reward colour by 12% (Figure <a href="hecale-experiments.html#fig:learning-data-plot">1</a>).</p>
+<p>We find that there is a significant shift in preference for the morning colour between time periods among high performing butterflies (p = 0.01). When trained these butterflies shift their preference for the morning reward colour by 12% (Figure <a href="hecale-experiments.html#fig:learning-data-plot">2</a>).</p>
 <div class="figure"><span id="fig:learning-data-plot"></span>
 <img src="Analysis-for-Heliconiini-time-learning_files/figure-html/learning-data-plot-1.png" alt="Data from colour preference trials of H. hecale meeting the training criterion. (A) Naïve preferences in the morning and afternoon. (B) Preferences of butterflies from (A) post-training. Grey lines connect individuals. Data are means ± 95% CI." width="672" />
 <p class="caption">
-Figure 1: Data from colour preference trials of H. hecale meeting the training criterion. (A) Naïve preferences in the morning and afternoon. (B) Preferences of butterflies from (A) post-training. Grey lines connect individuals. Data are means ± 95% CI.
+Figure 2: Data from colour preference trials of H. hecale meeting the training criterion. (A) Naïve preferences in the morning and afternoon. (B) Preferences of butterflies from (A) post-training. Grey lines connect individuals. Data are means ± 95% CI.
 </p>
 </div>
 </div>
 <div id="model-residuals-4" class="section level5">
 <h5>Model Residuals</h5>
-<p><img src="Analysis-for-Heliconiini-time-learning_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+<p><img src="Analysis-for-Heliconiini-time-learning_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
 </div>
 </div>
 <div id="low-performers-1" class="section level4">
 <h4>Low Performers</h4>
 <p>We now ask whether individuals who were not correct at a high rate shift preference when trained.</p>
-<div id="model-5" class="section level5">
+<div id="model-6" class="section level5">
 <h5>Model</h5>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="hecale-experiments.html#cb10-1" aria-hidden="true" tabindex="-1"></a>trained.model.low.performers <span class="ot">=</span> </span>
-<span id="cb10-2"><a href="hecale-experiments.html#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glmer</span>(<span class="fu">cbind</span>(n.morning.colour.test, n.afternoon.colour.test) <span class="sc">~</span> </span>
-<span id="cb10-3"><a href="hecale-experiments.html#cb10-3" aria-hidden="true" tabindex="-1"></a>          time.of.day <span class="sc">*</span> final.presentation <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> cage<span class="sc">/</span>id), </span>
-<span id="cb10-4"><a href="hecale-experiments.html#cb10-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">data=</span>  data5, <span class="at">family =</span> binomial)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="hecale-experiments.html#cb12-1" aria-hidden="true" tabindex="-1"></a>trained.model.low.performers <span class="ot">=</span> </span>
+<span id="cb12-2"><a href="hecale-experiments.html#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glmer</span>(<span class="fu">cbind</span>(n.morning.colour.test, n.afternoon.colour.test) <span class="sc">~</span> </span>
+<span id="cb12-3"><a href="hecale-experiments.html#cb12-3" aria-hidden="true" tabindex="-1"></a>          time.of.day <span class="sc">*</span> final.presentation <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> cage<span class="sc">/</span>id), </span>
+<span id="cb12-4"><a href="hecale-experiments.html#cb12-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">data=</span>  data5, <span class="at">family =</span> binomial)</span></code></pre></div>
 </div>
-<div id="results-5" class="section level5">
+<div id="results-6" class="section level5">
 <h5>Results</h5>
 <table>
 <thead>
@@ -554,7 +892,7 @@ Figure 1: Data from colour preference trials of H. hecale meeting the training c
 </div>
 <div id="model-residuals-5" class="section level5">
 <h5>Model Residuals</h5>
-<p><img src="Analysis-for-Heliconiini-time-learning_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+<p><img src="Analysis-for-Heliconiini-time-learning_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
 </div>
 </div>
 </div>
@@ -562,7 +900,7 @@ Figure 1: Data from colour preference trials of H. hecale meeting the training c
 <div id="hecale-activity-between-time-periods" class="section level2">
 <h2>Hecale activity between time periods</h2>
 <p>To see whether there was a difference in the total number of choices a butterfly made at a particular time period we used a Poisson generalised linear mixed effect model.</p>
-<div id="variables-2" class="section level5">
+<div id="variables-3" class="section level5">
 <h5>Variables</h5>
 <ul>
 <li><code>total.activity</code> is the total number of choices (correct and incorrect) a butterfly made in a time period</li>
@@ -571,13 +909,13 @@ Figure 1: Data from colour preference trials of H. hecale meeting the training c
 <li><code>id</code> is the identity of the individual butterfly</li>
 </ul>
 </div>
-<div id="model-6" class="section level5">
+<div id="model-7" class="section level5">
 <h5>Model</h5>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="hecale-experiments.html#cb11-1" aria-hidden="true" tabindex="-1"></a>activity.model <span class="ot">=</span> </span>
-<span id="cb11-2"><a href="hecale-experiments.html#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glmer</span>(total.activity <span class="sc">~</span> time.of.day <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> cage<span class="sc">/</span>id),</span>
-<span id="cb11-3"><a href="hecale-experiments.html#cb11-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">data=</span> data, <span class="at">family =</span> poisson)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="hecale-experiments.html#cb13-1" aria-hidden="true" tabindex="-1"></a>activity.model <span class="ot">=</span> </span>
+<span id="cb13-2"><a href="hecale-experiments.html#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glmer</span>(total.activity <span class="sc">~</span> time.of.day <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> cage<span class="sc">/</span>id),</span>
+<span id="cb13-3"><a href="hecale-experiments.html#cb13-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">data=</span> data, <span class="at">family =</span> poisson)</span></code></pre></div>
 </div>
-<div id="results-6" class="section level5">
+<div id="results-7" class="section level5">
 <h5>Results</h5>
 <table>
 <thead>
@@ -610,13 +948,13 @@ Figure 1: Data from colour preference trials of H. hecale meeting the training c
 <div class="figure"><span id="fig:activity-data-plot"></span>
 <img src="Analysis-for-Heliconiini-time-learning_files/figure-html/activity-data-plot-1.png" alt="The morning and afternoon activity values for individuual btuterflies. Data are means +/- 95% CI. Lines connects individuals across time periods" width="672" />
 <p class="caption">
-Figure 2: The morning and afternoon activity values for individuual btuterflies. Data are means +/- 95% CI. Lines connects individuals across time periods
+Figure 3: The morning and afternoon activity values for individuual btuterflies. Data are means +/- 95% CI. Lines connects individuals across time periods
 </p>
 </div>
 </div>
 <div id="model-residuals-6" class="section level5">
 <h5>Model Residuals</h5>
-<p><img src="Analysis-for-Heliconiini-time-learning_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
+<p><img src="Analysis-for-Heliconiini-time-learning_files/figure-html/unnamed-chunk-35-1.png" width="672" /></p>
 
 </div>
 </div>

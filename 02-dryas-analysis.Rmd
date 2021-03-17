@@ -23,7 +23,7 @@ data = data %>% group_by(id) %>% mutate(total.activity = (n.correct.training+n.i
 
 In a second experiment, we tested a reduced sample of *Dryas iulia*, a closely related butterfly, to test if the ability to learn associations was limited to *Heliconius*. 13 out of 19 D. iulia made both choices in both time periods during training, the remaining 6 were removed from further analyses. An additional individual was removed after making no feeding attempts in the final test. One cage had purple rewarded in the AM and yellow rewarded in the PM with an unreversed final test order (group 1), while the second cage had yellow rewarded in the AM and purple rewarded in the PM with a reversed final test order (group 2). In this sample only Dryas from group 2 met the training criterion (n = 6). However, since the order of the final test has no bearing on how an individual behaves during the training trials, and test order has no effect in *H. hecale*, we assumed this is unlikely to be problematic.
 
-## Dryas all individuals 
+## Dryas all participating individuals 
 
 Across analyses on Dryas learning performance we again asked whether the time of day influenced: 
 

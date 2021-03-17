@@ -21,7 +21,7 @@
   
   
 
-<meta name="author" content="Wyatt Toure" />
+<meta name="author" content="M. Wyatt Toure" />
 
 
 
@@ -135,7 +135,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Background</a></li>
 <li class="chapter" data-level="" data-path="hecale-experiments.html"><a href="hecale-experiments.html"><i class="fa fa-check"></i>Hecale experiments</a>
 <ul>
-<li class="chapter" data-level="" data-path="hecale-experiments.html"><a href="hecale-experiments.html#hecale-all-individuals"><i class="fa fa-check"></i>Hecale all individuals</a>
+<li class="chapter" data-level="" data-path="hecale-experiments.html"><a href="hecale-experiments.html#full-model"><i class="fa fa-check"></i>Full model</a></li>
+<li class="chapter" data-level="" data-path="hecale-experiments.html"><a href="hecale-experiments.html#hecale-all-participating-individuals"><i class="fa fa-check"></i>Hecale all participating individuals</a>
 <ul>
 <li class="chapter" data-level="" data-path="hecale-experiments.html"><a href="hecale-experiments.html#initial-preference"><i class="fa fa-check"></i>Initial preference</a></li>
 <li class="chapter" data-level="" data-path="hecale-experiments.html"><a href="hecale-experiments.html#trained-preference"><i class="fa fa-check"></i>Trained preference</a></li>
@@ -149,7 +150,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="" data-path="dryas-experiments.html"><a href="dryas-experiments.html"><i class="fa fa-check"></i>Dryas experiments</a>
 <ul>
-<li class="chapter" data-level="" data-path="dryas-experiments.html"><a href="dryas-experiments.html#dryas-all-individuals"><i class="fa fa-check"></i>Dryas all individuals</a>
+<li class="chapter" data-level="" data-path="dryas-experiments.html"><a href="dryas-experiments.html#dryas-all-participating-individuals"><i class="fa fa-check"></i>Dryas all participating individuals</a>
 <ul>
 <li class="chapter" data-level="" data-path="dryas-experiments.html"><a href="dryas-experiments.html#initial-preference-2"><i class="fa fa-check"></i>Initial preference</a></li>
 </ul></li>
@@ -182,8 +183,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="dryas-experiments" class="section level1">
 <h1>Dryas experiments</h1>
 <p>In a second experiment, we tested a reduced sample of <em>Dryas iulia</em>, a closely related butterfly, to test if the ability to learn associations was limited to <em>Heliconius</em>. 13 out of 19 D. iulia made both choices in both time periods during training, the remaining 6 were removed from further analyses. An additional individual was removed after making no feeding attempts in the final test. One cage had purple rewarded in the AM and yellow rewarded in the PM with an unreversed final test order (group 1), while the second cage had yellow rewarded in the AM and purple rewarded in the PM with a reversed final test order (group 2). In this sample only Dryas from group 2 met the training criterion (n = 6). However, since the order of the final test has no bearing on how an individual behaves during the training trials, and test order has no effect in <em>H. hecale</em>, we assumed this is unlikely to be problematic.</p>
-<div id="dryas-all-individuals" class="section level2">
-<h2>Dryas all individuals</h2>
+<div id="dryas-all-participating-individuals" class="section level2">
+<h2>Dryas all participating individuals</h2>
 <p>Across analyses on Dryas learning performance we again asked whether the time of day influenced:</p>
 <ol style="list-style-type: lower-alpha">
 <li><p>In subsections titled <strong>Initial preference</strong> - shifts in proportional preference for the colour rewarding in the morning when naïve, using a binomial GLMM with response variable “morning reward colour choices/afternoon reward colour choices” and fixed factor “time of day” (morning or afternoon);</p></li>
@@ -191,20 +192,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ol>
 <p>Identity was included as a random effect throughout.</p>
 <p>First we subset our data to remove any individuals who did not make both colour choices in either morning or afternoon during training.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="dryas-experiments.html#cb12-1" aria-hidden="true" tabindex="-1"></a>data2 <span class="ot">=</span> data <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="fu">all</span>(n.correct.training <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">&amp;</span> n.incorrect.training <span class="sc">&gt;</span> <span class="dv">0</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="dryas-experiments.html#cb14-1" aria-hidden="true" tabindex="-1"></a>data2 <span class="ot">=</span> data <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="fu">all</span>(n.correct.training <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">&amp;</span> n.incorrect.training <span class="sc">&gt;</span> <span class="dv">0</span>))</span></code></pre></div>
 <p>Furthermore we remove individuals who did not respond at all during a session in final test.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="dryas-experiments.html#cb13-1" aria-hidden="true" tabindex="-1"></a>data3 <span class="ot">=</span> data2 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="fu">all</span>(n.morning.colour.test <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">|</span> n.afternoon.colour.test <span class="sc">&gt;</span> <span class="dv">0</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="dryas-experiments.html#cb15-1" aria-hidden="true" tabindex="-1"></a>data3 <span class="ot">=</span> data2 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="fu">all</span>(n.morning.colour.test <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">|</span> n.afternoon.colour.test <span class="sc">&gt;</span> <span class="dv">0</span>))</span></code></pre></div>
 <div id="initial-preference-2" class="section level3">
 <h3>Initial preference</h3>
-<div id="model-7" class="section level5">
+<div id="model-8" class="section level5">
 <h5>Model</h5>
 <p>We first ask whether there is there a shift in preference for colours based on the time of day when individuals are naive.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="dryas-experiments.html#cb14-1" aria-hidden="true" tabindex="-1"></a>naive.model <span class="ot">=</span> </span>
-<span id="cb14-2"><a href="dryas-experiments.html#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glmer</span>(<span class="fu">cbind</span>(n.morning.colour.initial, n.afternoon.colour.initial) <span class="sc">~</span> </span>
-<span id="cb14-3"><a href="dryas-experiments.html#cb14-3" aria-hidden="true" tabindex="-1"></a>          time.of.day <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> cage<span class="sc">/</span>id),</span>
-<span id="cb14-4"><a href="dryas-experiments.html#cb14-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">data=</span>  data3, <span class="at">family =</span> binomial)</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="dryas-experiments.html#cb16-1" aria-hidden="true" tabindex="-1"></a>naive.model <span class="ot">=</span> </span>
+<span id="cb16-2"><a href="dryas-experiments.html#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glmer</span>(<span class="fu">cbind</span>(n.morning.colour.initial, n.afternoon.colour.initial) <span class="sc">~</span> </span>
+<span id="cb16-3"><a href="dryas-experiments.html#cb16-3" aria-hidden="true" tabindex="-1"></a>          time.of.day <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> cage<span class="sc">/</span>id),</span>
+<span id="cb16-4"><a href="dryas-experiments.html#cb16-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">data=</span>  data3, <span class="at">family =</span> binomial)</span></code></pre></div>
 </div>
-<div id="results-7" class="section level5">
+<div id="results-8" class="section level5">
 <h5>Results</h5>
 <table>
 <thead>
@@ -237,21 +238,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="model-residuals-7" class="section level5">
 <h5>Model Residuals</h5>
-<p><img src="Analysis-for-Heliconiini-time-learning_files/figure-html/unnamed-chunk-40-1.png" width="672" /></p>
+<p><img src="Analysis-for-Heliconiini-time-learning_files/figure-html/unnamed-chunk-42-1.png" width="672" /></p>
 </div>
 </div>
 </div>
 <div id="trained-preference-2" class="section level2">
 <h2>Trained preference</h2>
-<div id="model-8" class="section level5">
+<div id="model-9" class="section level5">
 <h5>Model</h5>
 <p>In this model we ask whether there is a shift in colour preference based on time of day for all butterflies which participated in the experiment.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="dryas-experiments.html#cb15-1" aria-hidden="true" tabindex="-1"></a>trained.model <span class="ot">=</span> </span>
-<span id="cb15-2"><a href="dryas-experiments.html#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glmer</span>(<span class="fu">cbind</span>(n.morning.colour.test, n.afternoon.colour.test) <span class="sc">~</span> </span>
-<span id="cb15-3"><a href="dryas-experiments.html#cb15-3" aria-hidden="true" tabindex="-1"></a>          time.of.day <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> id),</span>
-<span id="cb15-4"><a href="dryas-experiments.html#cb15-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">data=</span>  data3, <span class="at">family =</span> binomial)</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="dryas-experiments.html#cb17-1" aria-hidden="true" tabindex="-1"></a>trained.model <span class="ot">=</span> </span>
+<span id="cb17-2"><a href="dryas-experiments.html#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glmer</span>(<span class="fu">cbind</span>(n.morning.colour.test, n.afternoon.colour.test) <span class="sc">~</span> </span>
+<span id="cb17-3"><a href="dryas-experiments.html#cb17-3" aria-hidden="true" tabindex="-1"></a>          time.of.day <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> id),</span>
+<span id="cb17-4"><a href="dryas-experiments.html#cb17-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">data=</span>  data3, <span class="at">family =</span> binomial)</span></code></pre></div>
 </div>
-<div id="results-8" class="section level5">
+<div id="results-9" class="section level5">
 <h5>Results</h5>
 <table>
 <thead>
@@ -284,26 +285,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="model-residuals-8" class="section level5">
 <h5>Model Residuals</h5>
-<p><img src="Analysis-for-Heliconiini-time-learning_files/figure-html/unnamed-chunk-45-1.png" width="672" /></p>
+<p><img src="Analysis-for-Heliconiini-time-learning_files/figure-html/unnamed-chunk-47-1.png" width="672" /></p>
 </div>
 </div>
 <div id="dryas-high-and-low-performers" class="section level2">
 <h2>Dryas high and low performers</h2>
 <p>Remove individuals who did not achieve greater than 50% correct responses in last 2 days of training</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="dryas-experiments.html#cb16-1" aria-hidden="true" tabindex="-1"></a>data4 <span class="ot">=</span> data3 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="fu">all</span>(prop.correct.training.last<span class="fl">.2</span> <span class="sc">&gt;</span> <span class="fl">0.5</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="dryas-experiments.html#cb18-1" aria-hidden="true" tabindex="-1"></a>data4 <span class="ot">=</span> data3 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="fu">all</span>(prop.correct.training.last<span class="fl">.2</span> <span class="sc">&gt;</span> <span class="fl">0.5</span>))</span></code></pre></div>
 <div id="initial-preference-3" class="section level3">
 <h3>Initial preference</h3>
 <div id="high-performers-2" class="section level4">
 <h4>High Performers</h4>
-<div id="model-9" class="section level5">
+<div id="model-10" class="section level5">
 <h5>Model</h5>
 <p>Do individuals who perform well in last 2 days of training shift preference initially</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="dryas-experiments.html#cb17-1" aria-hidden="true" tabindex="-1"></a>naive.model.high.performers <span class="ot">=</span> </span>
-<span id="cb17-2"><a href="dryas-experiments.html#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glmer</span>(<span class="fu">cbind</span>(n.morning.colour.initial, n.afternoon.colour.initial) <span class="sc">~</span> </span>
-<span id="cb17-3"><a href="dryas-experiments.html#cb17-3" aria-hidden="true" tabindex="-1"></a>          time.of.day  <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span>id),</span>
-<span id="cb17-4"><a href="dryas-experiments.html#cb17-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">data=</span> data4, <span class="at">family =</span> binomial)</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="dryas-experiments.html#cb19-1" aria-hidden="true" tabindex="-1"></a>naive.model.high.performers <span class="ot">=</span> </span>
+<span id="cb19-2"><a href="dryas-experiments.html#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glmer</span>(<span class="fu">cbind</span>(n.morning.colour.initial, n.afternoon.colour.initial) <span class="sc">~</span> </span>
+<span id="cb19-3"><a href="dryas-experiments.html#cb19-3" aria-hidden="true" tabindex="-1"></a>          time.of.day  <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span>id),</span>
+<span id="cb19-4"><a href="dryas-experiments.html#cb19-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">data=</span> data4, <span class="at">family =</span> binomial)</span></code></pre></div>
 </div>
-<div id="results-9" class="section level5">
+<div id="results-10" class="section level5">
 <h5>Results</h5>
 <table>
 <thead>
@@ -336,19 +337,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="model-residuals-9" class="section level5">
 <h5>Model Residuals</h5>
-<p><img src="Analysis-for-Heliconiini-time-learning_files/figure-html/unnamed-chunk-51-1.png" width="384" /></p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="dryas-experiments.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pull out individuals below criterion</span></span>
-<span id="cb18-2"><a href="dryas-experiments.html#cb18-2" aria-hidden="true" tabindex="-1"></a>data5 <span class="ot">=</span> data3 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="fu">any</span>(prop.correct.training.last<span class="fl">.2</span> <span class="sc">&lt;</span> <span class="fl">0.51</span>))</span></code></pre></div>
+<p><img src="Analysis-for-Heliconiini-time-learning_files/figure-html/unnamed-chunk-53-1.png" width="384" /></p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="dryas-experiments.html#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pull out individuals below criterion</span></span>
+<span id="cb20-2"><a href="dryas-experiments.html#cb20-2" aria-hidden="true" tabindex="-1"></a>data5 <span class="ot">=</span> data3 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(id) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="fu">any</span>(prop.correct.training.last<span class="fl">.2</span> <span class="sc">&lt;</span> <span class="fl">0.51</span>))</span></code></pre></div>
 </div>
-<div id="model-10" class="section level5">
+<div id="model-11" class="section level5">
 <h5>Model</h5>
 <p>In this model we ask whether lower performing individuals shift their colour preference based on the time of day prior to training.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="dryas-experiments.html#cb19-1" aria-hidden="true" tabindex="-1"></a>naive.model.low.performers <span class="ot">=</span> </span>
-<span id="cb19-2"><a href="dryas-experiments.html#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glmer</span>(<span class="fu">cbind</span>(n.morning.colour.initial, n.afternoon.colour.initial) <span class="sc">~</span> </span>
-<span id="cb19-3"><a href="dryas-experiments.html#cb19-3" aria-hidden="true" tabindex="-1"></a>          time.of.day <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> id),</span>
-<span id="cb19-4"><a href="dryas-experiments.html#cb19-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span>data5, <span class="at">family =</span> binomial)</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="dryas-experiments.html#cb21-1" aria-hidden="true" tabindex="-1"></a>naive.model.low.performers <span class="ot">=</span> </span>
+<span id="cb21-2"><a href="dryas-experiments.html#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glmer</span>(<span class="fu">cbind</span>(n.morning.colour.initial, n.afternoon.colour.initial) <span class="sc">~</span> </span>
+<span id="cb21-3"><a href="dryas-experiments.html#cb21-3" aria-hidden="true" tabindex="-1"></a>          time.of.day <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> id),</span>
+<span id="cb21-4"><a href="dryas-experiments.html#cb21-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span>data5, <span class="at">family =</span> binomial)</span></code></pre></div>
 </div>
-<div id="results-10" class="section level5">
+<div id="results-11" class="section level5">
 <h5>Results</h5>
 <table>
 <thead>
@@ -381,7 +382,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="model-residuals-10" class="section level5">
 <h5>Model Residuals</h5>
-<p><img src="Analysis-for-Heliconiini-time-learning_files/figure-html/unnamed-chunk-57-1.png" width="384" /></p>
+<p><img src="Analysis-for-Heliconiini-time-learning_files/figure-html/unnamed-chunk-59-1.png" width="384" /></p>
 </div>
 </div>
 </div>
@@ -389,15 +390,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3>Trained preference</h3>
 <div id="high-performers-3" class="section level4">
 <h4>High Performers</h4>
-<div id="model-11" class="section level5">
+<div id="model-12" class="section level5">
 <h5>Model</h5>
 <p>In this model we ask whether higher performing individuals shift their colour preference based on the time of day after training.</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="dryas-experiments.html#cb20-1" aria-hidden="true" tabindex="-1"></a>trained.model.high.performers <span class="ot">=</span> </span>
-<span id="cb20-2"><a href="dryas-experiments.html#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glmer</span>(<span class="fu">cbind</span>(n.morning.colour.test, n.afternoon.colour.test) <span class="sc">~</span> </span>
-<span id="cb20-3"><a href="dryas-experiments.html#cb20-3" aria-hidden="true" tabindex="-1"></a>          time.of.day <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> id),</span>
-<span id="cb20-4"><a href="dryas-experiments.html#cb20-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">data=</span>  data4, <span class="at">family =</span> binomial)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="dryas-experiments.html#cb22-1" aria-hidden="true" tabindex="-1"></a>trained.model.high.performers <span class="ot">=</span> </span>
+<span id="cb22-2"><a href="dryas-experiments.html#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glmer</span>(<span class="fu">cbind</span>(n.morning.colour.test, n.afternoon.colour.test) <span class="sc">~</span> </span>
+<span id="cb22-3"><a href="dryas-experiments.html#cb22-3" aria-hidden="true" tabindex="-1"></a>          time.of.day <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> id),</span>
+<span id="cb22-4"><a href="dryas-experiments.html#cb22-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">data=</span>  data4, <span class="at">family =</span> binomial)</span></code></pre></div>
 </div>
-<div id="results-11" class="section level5">
+<div id="results-12" class="section level5">
 <h5>Results</h5>
 <table>
 <thead>
@@ -430,24 +431,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="figure"><span id="fig:dryas-learning-data-plot"></span>
 <img src="Analysis-for-Heliconiini-time-learning_files/figure-html/dryas-learning-data-plot-1.png" alt="Data from colour preference trials of D. iulia meeting the training criterion. (A) Naïve preferences in the morning and afternoon. (B) Preferences of butterflies from (A) post-training. Grey lines connect individuals. Data are means ± 95% CI" width="672" />
 <p class="caption">
-Figure 3: Data from colour preference trials of D. iulia meeting the training criterion. (A) Naïve preferences in the morning and afternoon. (B) Preferences of butterflies from (A) post-training. Grey lines connect individuals. Data are means ± 95% CI
+Figure 4: Data from colour preference trials of D. iulia meeting the training criterion. (A) Naïve preferences in the morning and afternoon. (B) Preferences of butterflies from (A) post-training. Grey lines connect individuals. Data are means ± 95% CI
 </p>
 </div>
 </div>
 <div id="model-residuals-11" class="section level5">
 <h5>Model Residuals</h5>
-<p><img src="Analysis-for-Heliconiini-time-learning_files/figure-html/unnamed-chunk-62-1.png" width="384" /></p>
-<p>There’s a slight deviation due to the outlier which increases the variance in the trained afternoon session as seen in Figure <a href="dryas-experiments.html#fig:dryas-learning-data-plot">3</a></p>
+<p><img src="Analysis-for-Heliconiini-time-learning_files/figure-html/unnamed-chunk-64-1.png" width="384" /></p>
+<p>There’s a slight deviation due to the outlier which increases the variance in the trained afternoon session as seen in Figure <a href="dryas-experiments.html#fig:dryas-learning-data-plot">4</a></p>
 </div>
-<div id="model-12" class="section level5">
+<div id="model-13" class="section level5">
 <h5>Model</h5>
 <p>In this model we ask whether lower performers shift their colour preference based on the time of day.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="dryas-experiments.html#cb21-1" aria-hidden="true" tabindex="-1"></a>trained.model.low.performers <span class="ot">=</span> </span>
-<span id="cb21-2"><a href="dryas-experiments.html#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glmer</span>(<span class="fu">cbind</span>(n.morning.colour.test, n.afternoon.colour.test) <span class="sc">~</span> </span>
-<span id="cb21-3"><a href="dryas-experiments.html#cb21-3" aria-hidden="true" tabindex="-1"></a>          time.of.day <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> id),</span>
-<span id="cb21-4"><a href="dryas-experiments.html#cb21-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">data=</span>  data5, <span class="at">family =</span> binomial)</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="dryas-experiments.html#cb23-1" aria-hidden="true" tabindex="-1"></a>trained.model.low.performers <span class="ot">=</span> </span>
+<span id="cb23-2"><a href="dryas-experiments.html#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glmer</span>(<span class="fu">cbind</span>(n.morning.colour.test, n.afternoon.colour.test) <span class="sc">~</span> </span>
+<span id="cb23-3"><a href="dryas-experiments.html#cb23-3" aria-hidden="true" tabindex="-1"></a>          time.of.day <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> id),</span>
+<span id="cb23-4"><a href="dryas-experiments.html#cb23-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">data=</span>  data5, <span class="at">family =</span> binomial)</span></code></pre></div>
 </div>
-<div id="results-12" class="section level5">
+<div id="results-13" class="section level5">
 <h5>Results</h5>
 <table>
 <thead>
@@ -476,43 +477,43 @@ Figure 3: Data from colour preference trials of D. iulia meeting the training cr
 </tr>
 </tbody>
 </table>
-<p>There is a significant effect of time of day for lower performers (p &lt; 0.001). Low performers shift their preference in the incorrect direction by about 12% (Figure <a href="dryas-experiments.html#fig:dryas-learning-data-plot-low-performers">4</a>).</p>
+<p>There is a significant effect of time of day for lower performers (p &lt; 0.001). Low performers shift their preference in the incorrect direction by about 12% (Figure <a href="dryas-experiments.html#fig:dryas-learning-data-plot-low-performers">5</a>).</p>
 <div class="figure"><span id="fig:dryas-learning-data-plot-low-performers"></span>
 <img src="Analysis-for-Heliconiini-time-learning_files/figure-html/dryas-learning-data-plot-low-performers-1.png" alt="Data from colour preference trials of D. iulia that do not meet the training criterion. (A) Naïve preferences in the morning and afternoon. (B) Preferences of butterflies from (A) post-training. Grey lines connect individuals. Data are means ± 95% CI" width="672" />
 <p class="caption">
-Figure 4: Data from colour preference trials of D. iulia that do not meet the training criterion. (A) Naïve preferences in the morning and afternoon. (B) Preferences of butterflies from (A) post-training. Grey lines connect individuals. Data are means ± 95% CI
+Figure 5: Data from colour preference trials of D. iulia that do not meet the training criterion. (A) Naïve preferences in the morning and afternoon. (B) Preferences of butterflies from (A) post-training. Grey lines connect individuals. Data are means ± 95% CI
 </p>
 </div>
 </div>
 <div id="model-residuals-12" class="section level5">
 <h5>Model Residuals</h5>
-<p><img src="Analysis-for-Heliconiini-time-learning_files/figure-html/unnamed-chunk-67-1.png" width="384" /></p>
+<p><img src="Analysis-for-Heliconiini-time-learning_files/figure-html/unnamed-chunk-69-1.png" width="384" /></p>
 </div>
 </div>
 </div>
 </div>
 <div id="dryas-activity-between-time-periods" class="section level2">
 <h2>Dryas activity between time periods</h2>
-<div id="model-13" class="section level5">
+<div id="model-14" class="section level5">
 <h5>Model</h5>
 <p>To see whether there was a difference in the total number of choices a butterfly made at a particular time period we used a Poisson generalised linear mixed effect model.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="dryas-experiments.html#cb22-1" aria-hidden="true" tabindex="-1"></a>dryas.activity.model <span class="ot">=</span> </span>
-<span id="cb22-2"><a href="dryas-experiments.html#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glmer</span>(total.activity <span class="sc">~</span> time.of.day <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> cage<span class="sc">/</span>id),</span>
-<span id="cb22-3"><a href="dryas-experiments.html#cb22-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">data=</span> data, <span class="at">family =</span> poisson)</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="dryas-experiments.html#cb24-1" aria-hidden="true" tabindex="-1"></a>dryas.activity.model <span class="ot">=</span> </span>
+<span id="cb24-2"><a href="dryas-experiments.html#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glmer</span>(total.activity <span class="sc">~</span> time.of.day <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> cage<span class="sc">/</span>id),</span>
+<span id="cb24-3"><a href="dryas-experiments.html#cb24-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">data=</span> data, <span class="at">family =</span> poisson)</span></code></pre></div>
 </div>
-<div id="results-13" class="section level5">
+<div id="results-14" class="section level5">
 <h5>Results</h5>
 <p><em>D. iulia</em> butterflies made on average 15 more choices in the afternoon than in the morning.</p>
 <div class="figure"><span id="fig:dryas-activity-data-plot"></span>
 <img src="Analysis-for-Heliconiini-time-learning_files/figure-html/dryas-activity-data-plot-1.png" alt="The morning and afternoon activity values for individuual btuterflies. Data are means +/- 95% CI. Lines connects individuals across time periods" width="672" />
 <p class="caption">
-Figure 5: The morning and afternoon activity values for individuual btuterflies. Data are means +/- 95% CI. Lines connects individuals across time periods
+Figure 6: The morning and afternoon activity values for individuual btuterflies. Data are means +/- 95% CI. Lines connects individuals across time periods
 </p>
 </div>
 </div>
 <div id="model-residuals-13" class="section level5">
 <h5>Model Residuals</h5>
-<p><img src="Analysis-for-Heliconiini-time-learning_files/figure-html/unnamed-chunk-70-1.png" width="672" /></p>
+<p><img src="Analysis-for-Heliconiini-time-learning_files/figure-html/unnamed-chunk-72-1.png" width="672" /></p>
 </div>
 </div>
 </div>

@@ -13,14 +13,204 @@ library(effects)
 library(broom)
 library(broom.mixed)
 library(cowplot)
-
+library(emmeans)
 
 data = read.csv('heliconiini-data.csv')
 data =  data %>% filter(species == 'hecale')
 data = data %>% group_by(id) %>% mutate(total.activity = (n.correct.training+n.incorrect.training))
 ```
 
+```{r full-data-wrangling, include=FALSE}
+keycol2 <- "training"
+valuecol2 <- "n.morning.colour"
+gathercols2 <- c("n.morning.colour.initial", "n.morning.colour.test")
+temp.data1 = gather_(data, keycol2, valuecol2, gathercols2)
+temp.data1
+
+temp.data1 = temp.data1 %>% mutate(training=recode(training, n.morning.colour.initial = "1untrained", n.morning.colour.test = "2trained"))
+
+temp.data1 = temp.data1 %>% select(id, time.of.day, training, n.morning.colour, final.presentation, cage)
+
+keycol <- "training"
+valuecol <- "n.afternoon.colour"
+gathercols <- c("n.afternoon.colour.initial", "n.afternoon.colour.test")
+temp.data2 = gather_(data, keycol, valuecol, gathercols)
+temp.data2
+
+temp.data2 = temp.data2 %>% mutate(training=recode(training, n.afternoon.colour.initial = "1untrained", n.afternoon.colour.test = "2trained"))
+
+temp.data2 = temp.data2 %>% select(id, time.of.day, training, n.afternoon.colour, final.presentation, cage)
+
+long.heliconiini.data = inner_join(temp.data1, temp.data2)
+```
+
 # Hecale experiments
+
+## Full model 
+
+In a first pass I looked at a full model, with all butterflies I had data for, which asked whether butterflies shift their preference for the colour that is rewarding in the morning based on the time of day after being trained to either purple or yellow in either the morning or afternoon. I also included random effects of cage and individual ID. 
+
+##### Variables
+
+* `cbind(n.morning.colour, n.afternoon.colour)` The proportional preference for the colour rewarding in the morning 
+
+* `time.of.day` The time of day at which a trial was conducted. Either 'morning' (8 am to 10 am) or 'afternoon' (3pm to 5pm)
+
+* `training` The training status of a butterfly. Either 'trained' or 'untrained'.
+
+* `final.presentation` The order of the presentation of the final preference test. Either 'normal' (morning test then afternoon test) or 'reversed' (afternoon test then morning test)
+
+* `cage` 	The identity of the cage in which the butterfly was trained and tested
+
+* `id` The individual identitiy of the butterfly
+
+##### Model
+
+```{r full-model}
+full.model = 
+  glmer(cbind(n.morning.colour, n.afternoon.colour) ~ 
+          time.of.day * training * final.presentation + (1 | cage/id),
+        data = long.heliconiini.data, 
+        control=glmerControl(optimizer="bobyqa",optCtrl=list(maxfun=2e5)),
+        family = binomial)
+```
+
+```{r, echo=FALSE, results=FALSE}
+table.row.name.vec = c("Intercept", "Time of Day", "Training", "Final Presentation", "Time of Day X Training", "Time of Day X Final Presentation", "Training X Final Presentation", "Time of Day X Training X Final Presentation ")
+
+full.model.tidy_fit = broom.mixed::tidy(full.model)
+
+# Changing tibble header names 
+full.model.tidy_fit = rename(full.model.tidy_fit, Factor = term, Estimate = estimate, Std_Error = std.error, T_statistic = statistic, P_value = p.value)
+
+# Changing tibble row names 
+full.model.tidy_fit[1:8,3] <- table.row.name.vec
+
+# formatting p values
+full.model.tidy_fit$P_value = ifelse(full.model.tidy_fit$P_value < .001, ## Condition
+                      "< .001",  ## if condition is true
+                      paste(full.model.tidy_fit$P_value %>% round(3)))
+```
+
+```{r,  results=TRUE, echo=FALSE}
+knitr::kable(full.model.tidy_fit[1:8,] %>% select(-effect, -group) %>% mutate_if(is.numeric, round, digits = 3), format = "html")
+```
+
+There is a significant three-way interaction effect between the time of day, presentation order of the final test and the training status of butterflies (p = 0.029). 
+
+Note also that we see more variance among individuals than among cages (individual σ = 1.153, cage σ = 0.202), which suggests individuals are not copying each other. We might have expected individuals to conform to their cage-mates' choices if butterflies were using social cues leading to more variance among cages than among individuals however we do not see evidence for this.  
+
+##### Post-Hoc Tests
+
+To investigate the nature of these interactions post-hoc I used [`emmeans`](https://cran.r-project.org/web/packages/emmeans/index.html). I was interested in whether training induced a time of day based shift in colour preference. Therefore, I wanted to see if there is a decrease in preference for the colour rewarding in the morning from morning to afternoon after training for *both* normal and reversed butterflies. 
+
+If butterflies were only learning the order of presentation we would expect to see an increase in preference for the colour rewarding in the morning from morning to afternoon since these butterflies were presented with their first final test session in the afternoon.
+
+To investigate a time-based shift in preference across these treatments I used simple contrasts based on the factor time of day. 
+
+```{r post-hoc-contrasts}
+full.model.emm = 
+  emmeans(full.model, ~ training * time.of.day * final.presentation)
+
+time.of.day.contrast =
+  contrast(full.model.emm, 
+           "consec", 
+           simple = "time.of.day", 
+           combine = TRUE, 
+           adjust = "mvt") %>% summary(infer = TRUE)
+```
+
+```{r rounding-contrast-table-values, include=FALSE}
+contrasts.table.contrast_row.name.vec = as.factor(c("Afternoon - Morning", "Afternoon - Morning", "Afternoon - Morning", "Afternoon - Morning"))
+
+contrasts.table.training_row.name.vec = c("Untrained", "Trained", "Untrained", "Trained")
+
+time.of.day.contrasts.table = as.data.frame(time.of.day.contrast)
+
+time.of.day.contrasts.table$contrast <- contrasts.table.contrast_row.name.vec
+time.of.day.contrasts.table$training <- contrasts.table.training_row.name.vec
+
+time.of.day.contrasts.table = time.of.day.contrasts.table %>% select(-z.ratio, -df)
+time.of.day.contrasts.table$estimate = time.of.day.contrasts.table$estimate %>% round(3)
+time.of.day.contrasts.table$asymp.LCL = time.of.day.contrasts.table$asymp.LCL %>% round(3)
+time.of.day.contrasts.table$asymp.UCL = time.of.day.contrasts.table$asymp.UCL %>% round(3)
+time.of.day.contrasts.table$SE = time.of.day.contrasts.table$SE %>% round(3)
+time.of.day.contrasts.table$p.value = ifelse(time.of.day.contrasts.table$p.value < .001, ## Condition
+                      "< .001",  ## if condition is true
+                      paste(time.of.day.contrasts.table$p.value %>% round(3)))
+```
+
+```{r getting-change-in-preference-values, include=FALSE}
+full.model.emm.response.scale = 
+  emmeans(full.model, ~ training * time.of.day * final.presentation, type = "response")
+
+full.model.emmeans = as.data.frame(full.model.emm.response.scale)
+
+# Morning colour preference in morning minus preference in afternoon when untrained
+# for normal presentation order butterflies
+shift.colour.pref.norm.untrained = 
+  ((full.model.emmeans$prob[3] - full.model.emmeans$prob[1]) * 100) %>% round(2)
+
+# Morning colour preference in morning minus preference in afternoon when trained 
+# for normal presentation order butterflies
+shift.colour.pref.norm.trained = 
+  ((full.model.emmeans$prob[4] - full.model.emmeans$prob[2]) * 100) %>% round(2)
+
+# Morning colour preference in morning minus preference in afternoon when untrained
+# for reversed presentation order butterflies
+shift.colour.pref.reversed.untrained = 
+  ((full.model.emmeans$prob[7] - full.model.emmeans$prob[5]) * 100) %>% round(2)
+
+# Morning colour preference in morning minus preference in afternoon when trained 
+# for reversed presentation order butterflies
+shift.colour.pref.reversed.trained = 
+  ((full.model.emmeans$prob[8] - full.model.emmeans$prob[6]) * 100) %>% round(2)
+```
+
+##### Results
+
+```{r contrasts-table, echo=FALSE}
+knitr::kable(time.of.day.contrasts.table %>% select(contrast, training, final.presentation, estimate, asymp.LCL, asymp.UCL, p.value), format = "html", caption = "Table of post-hoc tests with a multivariate-t adjustment for multiple comparisons of a selected set of means. The contrasts represent the shift in preference for the colour rewarding in the morning based on the time of day, in this case the preference for the colour rewarding in the morning during the afternoon test session is subtracted by the preference for the colour rewarding in the morning during the morning test session. Training represents whether these tests were done prior to training on naive butterflies (untrained) or after training (trained). Values are all rounded to 3 decimal places.")
+```
+
+</br>
+
+Final test presentation order should have no bearing on naive data during the untrained test trial since it is only relevant for the final test trial, nevertheless I present the naive results for both groups when untrained. When untrained, naive butterflies with a normal final test presentation order significantly shift their preference in the *incorrect* direction by `r abs(shift.colour.pref.norm.untrained)`% (p = 0.011), that is they increase their preference for the colour rewarding in the morning during the afternoon trial. Naive butterflies with a reversed presentation order do not significantly shift their preference (p = 0.095) between time periods when untrained.
+
+For both normal and reversed final test presentation order butterflies, there is a decrease in preference for the colour rewarding in the morning from morning to afternoon after training. Butterflies with a standard presentation order decrease their preference for the colour rewarded in the morning by `r abs(shift.colour.pref.norm.trained)`% (p = 0.043) in the afternoon and butterflies with a reversed final test presentation order decrease their preference for the colour rewarded in the morning by `r abs(shift.colour.pref.reversed.trained)`% (p < 0.001) in the afternoon.
+
+```{r interaction-plot, echo=FALSE, fig.cap="Model estimates on the scale of the response variable displaying the interaction effects. Dots represent estimated means and lines connect means across time periods. Naive butterflies either do not shit their preference for the colour rewearded in the morning between time periods (reversed final test order butterflies) or significantly increase their preference for the colour rewarded in the morning in the afternoon (the incorrect direction). Trained butterflies decrease their preference for the colour rewarding in the morning in the afternoon after training in both final presentation order treatments.", fig.id="full-model-plot", warning=FALSE, message=FALSE}
+em.plot.labels = c("Untrained", "Trained")
+names(em.plot.labels) <- c("1untrained", "2trained")
+
+emmip(full.model, final.presentation ~ time.of.day | training, type = "response") + 
+  theme_cowplot() +  
+  scale_x_discrete(labels = c("Morning", "Afternoon")) + 
+  xlab('Time of day') + 
+  ylab('Preference for colour rewarding in morning') + 
+  labs(col = "Final presentation") +
+  theme(legend.position = "top", 
+        axis.text=element_text(size=12), 
+        axis.title=element_text(size=13,face="bold"), 
+        plot.title = element_text(size=16, hjust=0.5)
+        ) + 
+  facet_grid( ~ training, labeller = labeller(training = em.plot.labels))
+  
+  
+```
+
+```{r optional-plot-addition, include=FALSE}
+# To add the raw data add this to the gglpot
+
+# geom_jitter(aes(x = time.of.day, y = #(n.morning.colour/(n.morning.colour+n.afternoon.colour)), colour = final.presentation), 
+#              data = long.heliconiini.data, pch = 16, width = 0, alpha = 0.4) +
+#  geom_line(aes(x = time.of.day, y = #(n.morning.colour/(n.morning.colour+n.afternoon.colour)), colour = final.presentation, group #=id), 
+#              data = long.heliconiini.data, alpha = 0.3, color = 'grey')
+```
+
+So in our full model we see there is a lot going on. I wanted to break it down even further.
+
+## Hecale all participating individuals
 
 Across analyses on *H. hecale* learning performance we asked whether the time of day influenced: 
 
@@ -30,9 +220,7 @@ Across analyses on *H. hecale* learning performance we asked whether the time of
 
 Identity was included as a random effect throughout as well as cage if it did not lead to a singular fit due to no variance being captured by the variable. 
 
-## Hecale all individuals
-
-We initially looked at all individuals—excluding those which did not attempt to feed from both feeders in AM or, more commonly, PM during training (see Hecale activity between time periods section), or did not make any foraging attempts during a final test session. We also established a training criterion given observed variation in responsiveness to the learning task throughout training. We identified individuals that correctly adjusted their behaviour in AM and PM sessions during training with reinforced feeders and in the [Hecale high and low performers section](#hecale-high-and-low-performers) asked whether these individuals demonstrate evidence of learning by behaving in the same way when presented with unreinforced feeders in the post-training preference test. 
+We looked at all individuals—excluding those which did not attempt to feed from both feeders in AM or, more commonly, PM during training (see [Hecale activity between time periods section](#hecale-activity-between-time-periods)), or did not make any foraging attempts during a final test session. We also established a training criterion given observed variation in responsiveness to the learning task throughout training. We identified individuals that correctly adjusted their behaviour in AM and PM sessions during training with reinforced feeders and in the [Hecale high and low performers section](#hecale-high-and-low-performers) asked whether these individuals demonstrate evidence of learning by behaving in the same way when presented with unreinforced feeders in the post-training preference test. 
 
 
 ### Initial preference
